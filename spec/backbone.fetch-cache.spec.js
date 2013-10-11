@@ -620,39 +620,79 @@ describe('Backbone.fetchCache', function() {
     });
 
     describe('#sync', function() {
-      var cacheData;
+      describe("using model instance url", function () { 
+        var cacheData;
 
-      beforeEach(function() {
-        var cache = {};
-        cacheData = { some: 'data' };
-        cache[model.url] = cacheData;
-        localStorage.setItem('backboneCache', JSON.stringify(cache));
-        Backbone.fetchCache.getLocalStorage();
+        beforeEach(function() {
+          var cache = {};
+          cacheData = { some: 'data' };
+          cache[model.url] = cacheData;
+          localStorage.setItem('backboneCache', JSON.stringify(cache));
+          Backbone.fetchCache.getLocalStorage();
+        });
+
+        it('clears the cache for the model on create', function() {
+          model.sync('create', model, {});
+          expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
+        });
+
+        it('clears the cache for the model on update', function() {
+          model.sync('update', model, {});
+          expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
+        });
+
+        it('clears the cache for the model on patch', function() {
+          model.sync('create', model, {});
+          expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
+        });
+
+        it('clears the cache for the model on delete', function() {
+          model.sync('create', model, {});
+          expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
+        });
+
+        it('does not clear the cache for the model on read', function() {
+          model.sync('read', model, {});
+          expect(Backbone.fetchCache._cache[model.url]).toEqual(cacheData);
+        });
       });
+      describe("using options-given url", function() {
+        var cacheData;
+        var optionsGiven;
 
-      it('clears the cache for the model on create', function() {
-        model.sync('create', model, {});
-        expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
-      });
+        beforeEach(function() {
+          optionsGiven = { 'url' : '/given-url' };
+          var cache = {};
+          cacheData = { some: 'data' };
+          cache[optionsGiven.url] = cacheData;
+          localStorage.setItem('backboneCache', JSON.stringify(cache));
+          Backbone.fetchCache.getLocalStorage();
+        });
 
-      it('clears the cache for the model on update', function() {
-        model.sync('update', model, {});
-        expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
-      });
+        it('clears the cache for the model on create', function() {
+          model.sync('create', model, optionsGiven);
+          expect(Backbone.fetchCache._cache[optionsGiven.url]).toBeUndefined();
+        });
 
-      it('clears the cache for the model on patch', function() {
-        model.sync('create', model, {});
-        expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
-      });
+        it('clears the cache for the model on update', function() {
+          model.sync('update', model, optionsGiven);
+          expect(Backbone.fetchCache._cache[optionsGiven.url]).toBeUndefined();
+        });
 
-      it('clears the cache for the model on delete', function() {
-        model.sync('create', model, {});
-        expect(Backbone.fetchCache._cache[model.url]).toBeUndefined();
-      });
+        it('clears the cache for the model on patch', function() {
+          model.sync('create', model, optionsGiven);
+          expect(Backbone.fetchCache._cache[optionsGiven.url]).toBeUndefined();
+        });
 
-      it('does not clear the cache for the model on read', function() {
-        model.sync('read', model, {});
-        expect(Backbone.fetchCache._cache[model.url]).toEqual(cacheData);
+        it('clears the cache for the model on delete', function() {
+          model.sync('create', model, optionsGiven);
+          expect(Backbone.fetchCache._cache[optionsGiven.url]).toBeUndefined();
+        });
+
+        it('does not clear the cache for the model on read', function() {
+          model.sync('read', model, optionsGiven);
+          expect(Backbone.fetchCache._cache[optionsGiven.url]).toEqual(cacheData);
+        });
       });
 
       it('calls super', function() {
