@@ -213,7 +213,7 @@
         i, len;
 
     // Build up a list of keys to delete from the cache, starting with this
-    keys.push(Backbone.fetchCache.getCacheKey(model));
+    keys.push(Backbone.fetchCache.getCacheKey(model, options));
 
     // If this model has a collection, also try to delete the cache for that
     if (!!collection) {
