@@ -150,6 +150,10 @@
         self = this;
 
     function setData() {
+      if (opts.parse) {
+        attributes = self.parse(attributes, opts);
+      }
+
       self.set(attributes, opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self, attributes, opts); }
 
