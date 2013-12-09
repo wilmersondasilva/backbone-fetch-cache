@@ -110,7 +110,8 @@
     Backbone.fetchCache.setLocalStorage();
   }
 
-  function clearItem(key) {
+  function clearItem(_key) {
+    var key = _.isFunction(_key) ? _key() : _key;
     delete Backbone.fetchCache._cache[key];
     Backbone.fetchCache.setLocalStorage();
   }
