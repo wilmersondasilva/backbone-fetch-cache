@@ -1,5 +1,6 @@
 Changelog
 
+- v1.4.0: Change - Return a full Deferred object to allow request cancellation. Thanks to [@garrensmith](https://github.com/garrensmith).
 - v1.3.0: Feature - Allow a prefix to be added to cache keys via Backbone.fetchCache.getLocalStorageKey function. Thanks to [@zhulduz](https://github.com/zhulduz).
 - v1.2.1: Bugfix - Allow for URL function in clearItem method. Thanks to [@prdn](https://github.com/prdn).
 - v1.2.0: Change - Call Model#parse when setting data on the model. Thanks to [@charlietilt](https://github.com/charlietilt). Bugfix - fix cache expiration issue when the url is passed via options for the model. Thanks to [@guilherme](https://github.com/guilherme).
