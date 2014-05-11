@@ -617,6 +617,39 @@ describe('Backbone.fetchCache', function() {
           expect(model.toJSON()).toEqual(cacheData);
         });
       });
+
+      describe('with caching disabled', function(){
+        beforeEach(function(){
+          Backbone.fetchCache.enabled = false;
+        });
+
+        afterEach(function(){
+          Backbone.fetchCache.enabled = true;
+        });
+
+        it("doesn't set cache", function(){
+          var cacheKey = Backbone.fetchCache.getCacheKey(model);
+          model.fetch({ cache: true });
+          server.respond();
+          expect(Backbone.fetchCache._cache[cacheKey])
+            .toBeUndefined();
+        });
+
+        it("doesn't use cache", function(){
+          Backbone.fetchCache._cache[model.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5* 60 * 1000)
+          };
+
+          waitsFor(promiseComplete(model.fetch({cache: true})));
+          server.respond();
+
+          runs(function() {
+            expect(model.toJSON()).not.toEqual(cacheData);
+            expect(model.toJSON()).toEqual(modelResponse);
+          });
+        });
+      });
     });
 
     describe('#sync', function() {
@@ -1009,6 +1042,35 @@ describe('Backbone.fetchCache', function() {
 
           expect(success.calls[0].args[0]).toEqual(collection);
           expect(success.calls[0].args[1]).toEqual(collectionResponse);
+        });
+      });
+      describe('with caching disabled', function(){
+        beforeEach(function(){
+          Backbone.fetchCache.enabled = false;
+        });
+
+        afterEach(function(){
+          Backbone.fetchCache.enabled = true;
+        });
+
+        it("doesn't set cache", function(){
+          collection.fetch({ cache: true });
+          server.respond();
+          expect(Backbone.fetchCache._cache[collection.url])
+            .toBeUndefined();
+        });
+
+        it("doesn't use cache", function(){
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() - (5* 60 * 1000)
+          };
+
+          collection.fetch({cache: true});
+          server.respond();
+
+          expect(collection.toJSON()).not.toEqual(cacheData);
+          expect(collection.toJSON()).toEqual(collectionResponse);
         });
       });
     });
