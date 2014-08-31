@@ -16,6 +16,7 @@
     "fetch",
     "cache"
   ],
+	"main": "./backbone.fetch-cache.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "latest",
