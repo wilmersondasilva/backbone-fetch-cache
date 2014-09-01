@@ -27,7 +27,6 @@
     "waitsFor": true,
     "runs": true,
     "require": true,
-    "module" : true,
-    "require": true
+    "module" : true
   }
 }
