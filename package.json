@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mrappleton/backbone-fetch-cache.git"
+    "url": "https://github.com/madglory/backbone-fetch-cache.git"
   },
   "keywords": [
     "backbone",
