@@ -25,6 +25,8 @@
     "jasmine": true,
     "sinon": true,
     "waitsFor": true,
-    "runs": true
+    "runs": true,
+    "require": true,
+    "module" : true
   }
 }

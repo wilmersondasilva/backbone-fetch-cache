@@ -11,6 +11,8 @@
     define(['underscore', 'backbone', 'jquery'], function (_, Backbone, $) {
       return (root.Backbone = factory(_, Backbone, $));
     });
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory(require('underscore'), require('backbone'), require('jquery'));
   } else {
     // Browser globals
     root.Backbone = factory(root._, root.Backbone, root.jQuery);
