@@ -87,7 +87,11 @@
     if(!url) { return; }
 
     if(opts && opts.data) {
-      return url + "?" + $.param(opts.data);
+      if(typeof opts.data === "string") {
+        return url + "?" + opts.data;
+      } else {
+        return url + "?" + $.param(opts.data);
+      }
     }
     return url;
   }
