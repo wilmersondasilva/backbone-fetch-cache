@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v1.4.0
+  backbone.fetch-cache v1.4.1
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
