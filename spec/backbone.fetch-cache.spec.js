@@ -1,5 +1,5 @@
 describe('Backbone.fetchCache', function() {
-  var model, collection, server, modelResponse, collectionResponse;
+  var model, errorModel, collection, errorCollection, server, modelResponse, errorModelResponse, collectionResponse;
   var originalPriorityFn = Backbone.fetchCache.priorityFn;
 
   // Async spec waitsFor helpers
@@ -24,8 +24,12 @@ describe('Backbone.fetchCache', function() {
   beforeEach(function() {
     model = new Backbone.Model();
     model.url = '/model-cache-test';
+    errorModel = new Backbone.Model();
+    errorModel.url = '/model-error-cache-test';
     collection = new Backbone.Collection();
     collection.url = '/collection-cache-test';
+    errorCollection = new Backbone.Collection();
+    errorCollection.url = '/collection-error-cache-test';
 
     // Mock xhr resposes
     server = sinon.fakeServer.create();
@@ -40,6 +44,16 @@ describe('Backbone.fetchCache', function() {
       200,
       { 'Content-Type': 'application/json' },
       JSON.stringify(collectionResponse)
+    ]);
+    server.respondWith('GET', errorModel.url, [
+      500,
+      { 'Content-Type': 'test/html' },
+      'Server Error'
+    ]);
+    server.respondWith('GET', errorCollection.url, [
+      500,
+      { 'Content-Type': 'test/html' },
+      'Server Error'
     ]);
   });
 
@@ -437,29 +451,28 @@ describe('Backbone.fetchCache', function() {
       });
 
       describe('on AJAX error', function() {
-        beforeEach(function() {
-          model.url = '/non-existant';
-        });
 
         it('rejects the promise', function() {
-          var promise = model.fetch();
+          var promise = errorModel.fetch();
 
           waitsFor(promiseComplete(promise));
           server.respond();
 
           runs(function() {
+            expect(Backbone.fetchCache._cache[errorModel.url]).toBeUndefined();
             expect(promise.state()).toBe('rejected');
           });
         });
 
         it('calls the error callback', function() {
           var spy = jasmine.createSpy('error');
-          var promise = model.fetch({ error: spy });
+          var promise = errorModel.fetch({ error: spy });
 
           waitsFor(promiseComplete(promise));
           server.respond();
 
           runs(function() {
+            expect(Backbone.fetchCache._cache[errorModel.url]).toBeUndefined();
             expect(spy).toHaveBeenCalled();
           });
         });
@@ -671,7 +684,7 @@ describe('Backbone.fetchCache', function() {
     });
 
     describe('#sync', function() {
-      describe('using model instance url', function () { 
+      describe('using model instance url', function () {
         var cacheData;
 
         beforeEach(function() {
@@ -863,29 +876,28 @@ describe('Backbone.fetchCache', function() {
       });
 
       describe('on AJAX error', function() {
-        beforeEach(function() {
-          collection.url = '/non-existant';
-        });
 
         it('rejects the promise', function() {
-          var promise = collection.fetch();
+          var promise = errorCollection.fetch();
 
           waitsFor(promiseComplete(promise));
           server.respond();
 
           runs(function() {
+            expect(Backbone.fetchCache._cache[errorCollection.url]).toBeUndefined();
             expect(promise.state()).toBe('rejected');
           });
         });
 
         it('calls the error callback', function() {
           var spy = jasmine.createSpy('error');
-          var promise = collection.fetch({ error: spy });
+          var promise = errorCollection.fetch({ error: spy });
 
           waitsFor(promiseComplete(promise));
           server.respond();
 
           runs(function() {
+            expect(Backbone.fetchCache._cache[errorCollection.url]).toBeUndefined();
             expect(spy).toHaveBeenCalled();
           });
         });
