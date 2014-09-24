@@ -76,6 +76,24 @@ describe('Backbone.fetchCache', function() {
       expect(Backbone.fetchCache.getCacheKey(model, {}))
         .toEqual(model.url);
     });
+
+    it('generates a standard querystring', function() {
+      var value = {
+        "string": "stringValue",
+        "float": 2.1,
+        "bool":false
+      };
+      var expected = model.url + "?string=stringValue&float=2.1&bool=false";
+      expect(Backbone.fetchCache.getCacheKey(model, {data: value}))
+        .toEqual(expected);
+    });
+
+    it('generates a standard querystring if data is a string', function() {
+      var value = "test";
+      var expected = model.url + "?test";
+      expect(Backbone.fetchCache.getCacheKey(model, {data: value}))
+        .toEqual(expected);
+    });
   });
 
   describe('.setCache', function() {
