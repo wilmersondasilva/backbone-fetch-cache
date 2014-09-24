@@ -13,9 +13,9 @@
     "cache"
   ],
   "license": "MIT",
-  "dependencies": [
+  "dependencies": {
     "backbone": ">=1.0.0"
-  ],
+  },
   "ignore": [
     "node_modules"
   ]
