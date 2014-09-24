@@ -31,8 +31,8 @@
       try {
         // impossible to write on some platforms when private browsing is on and
         // throws an exception = local storage not supported.
-        localStorage.setItem("test_support", "test_support");
-        localStorage.removeItem("test_support");
+        localStorage.setItem('test_support', 'test_support');
+        localStorage.removeItem('test_support');
       } catch (e) {
         supported = false;
       }
@@ -87,10 +87,10 @@
     if(!url) { return; }
 
     if(opts && opts.data) {
-      if(typeof opts.data === "string") {
-        return url + "?" + opts.data;
+      if(typeof opts.data === 'string') {
+        return url + '?' + opts.data;
       } else {
-        return url + "?" + $.param(opts.data);
+        return url + '?' + $.param(opts.data);
       }
     }
     return url;

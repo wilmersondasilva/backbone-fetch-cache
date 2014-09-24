@@ -33,12 +33,12 @@ describe('Backbone.fetchCache', function() {
     collectionResponse = [{ sausages: 'bacon' }, { rice: 'peas' }];
     server.respondWith('GET', model.url, [
       200,
-      { "Content-Type": "application/json" },
+      { 'Content-Type': 'application/json' },
       JSON.stringify(modelResponse)
     ]);
     server.respondWith('GET', collection.url, [
       200,
-      { "Content-Type": "application/json" },
+      { 'Content-Type': 'application/json' },
       JSON.stringify(collectionResponse)
     ]);
   });
@@ -79,18 +79,18 @@ describe('Backbone.fetchCache', function() {
 
     it('generates a standard querystring', function() {
       var value = {
-        "string": "stringValue",
-        "float": 2.1,
-        "bool":false
+        'string': 'stringValue',
+        'float': 2.1,
+        'bool':false
       };
-      var expected = model.url + "?string=stringValue&float=2.1&bool=false";
+      var expected = model.url + '?string=stringValue&float=2.1&bool=false';
       expect(Backbone.fetchCache.getCacheKey(model, {data: value}))
         .toEqual(expected);
     });
 
     it('generates a standard querystring if data is a string', function() {
-      var value = "test";
-      var expected = model.url + "?test";
+      var value = 'test';
+      var expected = model.url + '?test';
       expect(Backbone.fetchCache.getCacheKey(model, {data: value}))
         .toEqual(expected);
     });
@@ -671,7 +671,7 @@ describe('Backbone.fetchCache', function() {
     });
 
     describe('#sync', function() {
-      describe("using model instance url", function () { 
+      describe('using model instance url', function () { 
         var cacheData;
 
         beforeEach(function() {
@@ -707,7 +707,7 @@ describe('Backbone.fetchCache', function() {
           expect(Backbone.fetchCache._cache[model.url]).toEqual(cacheData);
         });
       });
-      describe("using options-given url", function() {
+      describe('using options-given url', function() {
         var cacheData;
         var optionsGiven;
 
