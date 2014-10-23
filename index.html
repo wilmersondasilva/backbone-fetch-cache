@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Backbone-fetch-cache : Caching for Backbone&#39;s fetch method">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Backbone-fetch-cache</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/madglory/backbone-fetch-cache">View on GitHub</a>
+
+          <h1 id="project_title">Backbone-fetch-cache</h1>
+          <h2 id="project_tagline">Caching for Backbone&#39;s fetch method</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/madglory/backbone-fetch-cache/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/madglory/backbone-fetch-cache/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="backbone-fetch-cache" class="anchor" href="#backbone-fetch-cache"><span class="octicon octicon-link"></span></a>Backbone fetch cache</h1>
+
+<p><a href="https://travis-ci.org/madglory/backbone-fetch-cache"><img src="https://travis-ci.org/madglory/backbone-fetch-cache.png?branch=master" alt="Build Status"></a></p>
+
+<p>A Backbone plugin to cache calls to <code>Backbone.Model.prototype.fetch</code> and
+<code>Backbone.Collection.prototype.fetch</code> in memory and <code>localStorage</code>.</p>
+
+<p>Compatible with Backbone 1.0.0 and up.</p>
+
+<h2>
+<a name="how-it-works" class="anchor" href="#how-it-works"><span class="octicon octicon-link"></span></a>How it works</h2>
+
+<p>This plugin intercepts calls to <code>fetch</code> and stores the results in a cache object (<code>Backbone.fetchCache._cache</code>). If fetch is called with <code>{ cache: true }</code> in the options and the URL has already been cached the AJAX call will be skipped.</p>
+
+<p>The local cache is persisted in <code>localStorage</code> if available for faster initial page loads.</p>
+
+<p>The <code>prefill</code> option allows for models and collections to be filled with cache data just until the <code>fetch</code> operations are complete -- a nice way to make the app feel snappy on slower connections.</p>
+
+<h2>
+<a name="whats-wrong-with-browser-caching-for-ajax-responses" class="anchor" href="#whats-wrong-with-browser-caching-for-ajax-responses"><span class="octicon octicon-link"></span></a>What's wrong with browser caching for AJAX responses?</h2>
+
+<p>Nothing. This plugin is primarily for working with an API where you don't have control over response cache headers.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Add the script to the page after backbone.js has been included:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/path/to/backbone.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/path/to/backbone.fetch-cache.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p>or if you're using AMD, require the script as a module:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'path/to/backbone.fetch-cache.js'</span><span class="p">]);</span>
+</pre></div>
+
+<p>Note that the AMD module depends on <code>underscore</code> and <code>backbone</code> modules being defined as it lists them as dependencies. If you don't have these mapped, you can do it by adding the following to your require config:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">requirejs</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+  <span class="nx">paths</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">backbone</span><span class="o">:</span> <span class="s1">'actual/path/to/backbone.js'</span><span class="p">,</span>
+    <span class="nx">underscore</span><span class="o">:</span> <span class="s1">'actual/path/to/underscore.js'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>A note on <a href="http://zeptojs.com/">Zepto.js</a>. This plugin uses <code>jQuery.Deferred</code>
+which is not included in Zepto. You'll need to add a third party
+implementation of <code>jQuery.Deferred</code>, e.g. <a href="https://github.com/Mumakil/Standalone-Deferred">Standalone-Deferred</a></p>
+
+<h2>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<h3>
+<a name="cache" class="anchor" href="#cache"><span class="octicon octicon-link"></span></a><code>cache</code>
+</h3>
+
+<p>Calls to <code>modelInstance.fetch</code> or <code>collectionInstance.fetch</code> will be fulfilled from the cache (if possible) when <code>cache: true</code> is set in the options hash:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="nx">myCollection</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+</pre></div>
+
+<hr>
+
+<h3>
+<a name="prefill" class="anchor" href="#prefill"><span class="octicon octicon-link"></span></a><code>prefill</code>
+</h3>
+
+<p>This option allows the model/collection to be populated from the cache immediately and then be updated once the call to <code>fetch</code> has completed. The initial cache hit calls the <code>prefillSuccess</code> callback and then the AJAX success/error callbacks are called as normal when the request is complete. This allows the page to render something immediately and then update it after the request completes. (Note: the <code>prefillSuccess</code> callback <em>will not fire</em> if the data is not found in the cache.)</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+  <span class="nx">prefill</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">prefillSuccess</span><span class="o">:</span> <span class="nx">someCallback</span><span class="p">,</span> <span class="c1">// Fires when the cache hit happens</span>
+  <span class="nx">success</span><span class="o">:</span> <span class="nx">anotherCallback</span> <span class="c1">// Fires after the AJAX call</span>
+<span class="p">});</span>
+
+<span class="nx">myCollection</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+  <span class="nx">prefill</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">prefillSuccess</span><span class="o">:</span> <span class="nx">someCallback</span><span class="p">,</span> <span class="c1">// Fires when the cache hit happens</span>
+  <span class="nx">success</span><span class="o">:</span> <span class="nx">anotherCallback</span> <span class="c1">// Fires after the AJAX call</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>This option can be used with the promises interface like so (note: the <code>progress</code> event <em>will not fire</em> if the data is not found in the cache.):</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">modelPromise</span> <span class="o">=</span> <span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">prefill</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="nx">modelPromise</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="nx">someCallback</span><span class="p">);</span> <span class="c1">// Fires when the cache hit happens</span>
+<span class="nx">modelPromise</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">anotherCallback</span><span class="p">);</span> <span class="c1">// Fires after the AJAX call</span>
+
+<span class="kd">var</span> <span class="nx">collectionPromise</span> <span class="o">=</span> <span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">prefill</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="nx">collectionPromise</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="nx">someCallback</span><span class="p">);</span> <span class="c1">// Fires when the cache hit happens</span>
+<span class="nx">collectionPromise</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">anotherCallback</span><span class="p">);</span> <span class="c1">// Fires after the AJAX call</span>
+</pre></div>
+
+<hr>
+
+<h3>
+<a name="expires" class="anchor" href="#expires"><span class="octicon octicon-link"></span></a><code>expires</code>
+</h3>
+
+<p>Cache vales expire after 5 minutes by default. You can adjust this by passing
+<code>expires: &lt;seconds&gt;</code> to the fetch call. Set to <code>false</code> to never expire:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">expires</span><span class="o">:</span> <span class="mi">60000</span> <span class="p">});</span>
+<span class="nx">myCollection</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">expires</span><span class="o">:</span> <span class="mi">60000</span> <span class="p">});</span>
+
+<span class="c1">// These will never expire</span>
+<span class="nx">myModel</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">expires</span><span class="o">:</span> <span class="kc">false</span> <span class="p">});</span>
+<span class="nx">myCollection</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">cache</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">expires</span><span class="o">:</span> <span class="kc">false</span> <span class="p">});</span>
+</pre></div>
+
+<hr>
+
+<h3>
+<a name="localstorage" class="anchor" href="#localstorage"><span class="octicon octicon-link"></span></a><code>localStorage</code>
+</h3>
+
+<p>By default the cache is persisted in localStorage (if available). Set <code>Backbone.fetchCache.localStorage = false</code> to disable this:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">Backbone</span><span class="p">.</span><span class="nx">fetchCache</span><span class="p">.</span><span class="nx">localStorage</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</pre></div>
+
+<h3>
+<a name="custom-cache-keys" class="anchor" href="#custom-cache-keys"><span class="octicon octicon-link"></span></a>Custom cache keys</h3>
+
+<p>By default the cache key is generated from the model's <code>url</code> property and the requests params:</p>
+
+<div class="highlight highlight-js"><pre><span class="s1">'/model/1?some=param'</span>
+</pre></div>
+
+<p>This can be overridden with custom logic if required:</p>
+
+<div class="highlight highlight-js"><pre><span class="c1">// Instance is a Backbone.Model or Backbone.Collection, options are passed</span>
+<span class="c1">// through form the fetch call</span>
+<span class="nx">Backbone</span><span class="p">.</span><span class="nx">fetchCache</span><span class="p">.</span><span class="nx">getCacheKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">instance</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">':'</span> <span class="o">+</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'id'</span><span class="p">);</span>
+  <span class="c1">// =&gt; UserModel:1</span>
+<span class="p">};</span>
+</pre></div>
+
+<h3>
+<a name="priorityfn" class="anchor" href="#priorityfn"><span class="octicon octicon-link"></span></a><code>priorityFn</code>
+</h3>
+
+<p>When setting items in localStorage, the browser may throw a <code>QUOTA_EXCEEDED_ERR</code>, meaning the store is full. Backbone.fetchCache tries to work around this problem by deleting what it considers the most stale item to make space for the new data. The staleness of data is determined by the sorting function <code>priorityFn</code>`, which by default returns the oldest item.</p>
+
+<p>The default is:</p>
+
+<pre><code>Backbone.fetchCache.priorityFn = function(a, b) {
+  if (!a || !a.expires || !b || !b.expires) {
+    return a;
+  }
+
+  return a.expires - b.expires;
+};
+</code></pre>
+
+<p>You can override this function with your own logic (in this case, returning the most recent item):</p>
+
+<pre><code>Backbone.fetchCache.priorityFn = function(a, b) {
+  return b.expires - a.expires;
+};
+</code></pre>
+
+<h2>
+<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h2>
+
+<p>The <code>sync</code> event is triggered on a cache hit. A <code>cachesync</code> event is also triggered on Models and Collections, but only when a cache hit happens. This can be used if you need to differentiate between a server backed <code>sync</code> event and a cache backed event.</p>
+
+<h2>
+<a name="automatic-cache-invalidation" class="anchor" href="#automatic-cache-invalidation"><span class="octicon octicon-link"></span></a>Automatic cache invalidation</h2>
+
+<p>The cache item for a particular call will be cleared when a <code>create</code>, <code>update</code>, <code>patch</code> or <code>delete</code> call is made to the server. The plugin tries to be intelligent about this by clearing a model's collection cache if the model has a <code>.collection property</code>.</p>
+
+<p>To achieve this, the plugin overrides <code>Backbone.Model.protoype.sync</code> and then calls the original method. If you are planning to override sync on a particular model then you should keep this in mind and make sure that you do it before the plugin runs. Overriding Backbone.sync directly should work fine.</p>
+
+<h2>
+<a name="manual-cache-invalidation" class="anchor" href="#manual-cache-invalidation"><span class="octicon octicon-link"></span></a>Manual cache invalidation</h2>
+
+<p>Sometimes you just need to clear a cached item manually. This can be called safely from anywhere in your application.</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">Backbone</span><span class="p">.</span><span class="nx">fetchCache</span><span class="p">.</span><span class="nx">clearItem</span><span class="p">(</span><span class="nx">myModel</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="tests" class="anchor" href="#tests"><span class="octicon octicon-link"></span></a>Tests</h2>
+
+<p>You can run the tests by cloning the repo, installing the dependencies and
+running <code>grunt jasmine</code>:</p>
+
+<pre><code>$ npm install
+$ grunt jasmine
+</code></pre>
+
+<p>The default grunt task runs tests and lints the code.</p>
+
+<pre><code>$ grunt
+</code></pre>
+
+<h2>
+<a name="releases" class="anchor" href="#releases"><span class="octicon octicon-link"></span></a>Releases</h2>
+
+<p>We will handle release versioning based on the changes. This will update <code>package.json</code>, <code>bower.json</code>, and also create a new git tag. See <a href="https://github.com/vojtajina/grunt-bump">grunt-bump</a> for more documentation.</p>
+
+<pre><code>$ grunt bump:patch
+$ grunt bump:minor
+$ grunt bump:major
+</code></pre>
+
+<p>Once the version is bumped you can uglify the file so the version makes it into the uglified version.</p>
+
+<pre><code>$ grunt uglify
+</code></pre>
+
+<p>Now commit the changes, push to GitHub, and <code>npm publish</code>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Backbone-fetch-cache maintained by <a href="https://github.com/madglory">madglory</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
