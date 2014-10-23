@@ -181,3 +181,20 @@ The default grunt task runs tests and lints the code.
 ```
 $ grunt
 ```
+
+## Releases
+We will handle release versioning based on the changes. This will update `package.json`, `bower.json`, and also create a new git tag. See [grunt-bump](https://github.com/vojtajina/grunt-bump) for more documentation.
+
+```
+$ grunt bump:patch
+$ grunt bump:minor
+$ grunt bump:major
+```
+
+Once the version is bumped you can uglify the file so the version makes it into the uglified version.
+
+```
+$ grunt uglify
+```
+
+Now commit the changes, push to GitHub, and `npm publish`.
