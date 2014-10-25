@@ -1,6 +1,6 @@
 {
   "name": "backbone-fetch-cache",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "author": "Andy Appleton",
   "description": "Caches calls to Backbone.[Model | Collection].fetch",
   "license": "MIT",
