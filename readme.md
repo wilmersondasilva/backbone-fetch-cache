@@ -183,13 +183,7 @@ $ grunt
 ```
 
 ## Releases
-We will handle release versioning based on the changes. This will update `package.json`, `bower.json`, and also create a new git tag. See [grunt-bump](https://github.com/vojtajina/grunt-bump) for more documentation.
-
-```
-$ grunt bump:patch
-$ grunt bump:minor
-$ grunt bump:major
-```
+We will handle release versioning based on the changes. This will update `package.json`, `bower.json`, and also create a new git tag.
 
 Once the version is bumped you can uglify the file so the version makes it into the uglified version.
 
