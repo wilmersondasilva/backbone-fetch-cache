@@ -637,6 +637,110 @@ describe('Backbone.fetchCache', function() {
         });
       });
 
+      describe('with prefillExpires: 1000 option', function() {
+        var cacheData;
+
+        beforeEach(function() {
+          cacheData = { cheese: 'pickle' };
+        });
+
+        it('returns value if cached value is neither expired nor prefill expired', function() {
+          Backbone.fetchCache._cache[model.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() + (5 * 60 * 1000)
+          };
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+
+          runs(function() {
+            expect(model.toJSON()).toEqual(cacheData);
+          });
+        });
+
+        it('fetches value if cached value is valid but prefill expired', function() {
+          Backbone.fetchCache._cache[model.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(model.toJSON()).toEqual(modelResponse);
+          });
+        });
+
+        it('triggers progress if cached value is valid but prefill expired', function() {
+          Backbone.fetchCache._cache[model.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+          var progress = jasmine.createSpy('progress');
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          }).progress(progress);
+
+          waitsFor(promiseNotified(promise));
+
+          runs(function() {
+            expect(progress).toHaveBeenCalledWith(model);
+          });
+        });
+
+        it("fetches value if value isn't cached", function() {
+          Backbone.fetchCache._cache = {};
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(model.toJSON()).toEqual(modelResponse);
+          });
+        });
+
+        it('fetches value if cached value is expired', function() {
+          Backbone.fetchCache._cache[model.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() - (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(model.toJSON()).not.toEqual(cacheData);
+            expect(model.toJSON()).toEqual(modelResponse);
+          });
+        });
+      });
+
       describe('with async: false option', function() {
         it('resolves synchronously', function() {
           Backbone.fetchCache._cache[model.url] = {
@@ -1074,6 +1178,111 @@ describe('Backbone.fetchCache', function() {
           expect(success.calls[0].args[1]).toEqual(collectionResponse);
         });
       });
+
+      describe('with prefillExpires: 1000 option', function() {
+        var cacheData;
+
+        beforeEach(function() {
+          cacheData = [ { cheese: 'pickle' } ];
+        });
+
+        it('returns value if cached value is neither expired nor prefill expired', function() {
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() + (5 * 60 * 1000)
+          };
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+
+          runs(function() {
+            expect(collection.toJSON()).toEqual(cacheData);
+          });
+        });
+
+        it('fetches value if cached value is valid but prefill expired', function() {
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(collection.toJSON()).toEqual(collectionResponse);
+          });
+        });
+
+        it('triggers progress if cached value is valid but prefill expired', function() {
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+          var progress = jasmine.createSpy('progress');
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          }).progress(progress);
+
+          waitsFor(promiseNotified(promise));
+
+          runs(function() {
+            expect(progress).toHaveBeenCalledWith(collection);
+          });
+        });
+
+        it("fetches value if value isn't cached", function() {
+          Backbone.fetchCache._cache = {};
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(collection.toJSON()).toEqual(collectionResponse);
+          });
+        });
+
+        it('fetches value if cached value is expired', function() {
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() - (5 * 60 * 1000),
+            prefillExpires: (new Date()).getTime() - (5 * 60 * 1000)
+          };
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(collection.toJSON()).not.toEqual(cacheData);
+            expect(collection.toJSON()).toEqual(collectionResponse);
+          });
+        });
+      });
+
       describe('with caching disabled', function(){
         beforeEach(function(){
           Backbone.fetchCache.enabled = false;

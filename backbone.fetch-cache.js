@@ -162,9 +162,14 @@
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],
         expired = false,
+        prefillExpired = false,
         attributes = false,
         deferred = new $.Deferred(),
         self = this;
+
+    function isPrefilling() {
+      return opts.prefill && (!opts.prefillExpires || prefillExpired);
+    }
 
     function setData() {
       if (opts.parse) {
@@ -179,7 +184,7 @@
       self.trigger('sync', self, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
-      if (opts.prefill) { deferred.notify(self); }
+      if (isPrefilling()) { deferred.notify(self); }
       // ...finish and return if we're not
       else {
         if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
@@ -190,6 +195,8 @@
     if (data) {
       expired = data.expires;
       expired = expired && data.expires < (new Date()).getTime();
+      prefillExpired = data.prefillExpires;
+      prefillExpired = prefillExpired && data.prefillExpires < (new Date()).getTime();
       attributes = data.value;
     }
 
@@ -203,7 +210,7 @@
         setData();
       }
 
-      if (!opts.prefill) {
+      if (!isPrefilling()) {
         return deferred;
       }
     }
@@ -260,9 +267,14 @@
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],
         expired = false,
+        prefillExpired = false,
         attributes = false,
         deferred = new $.Deferred(),
         self = this;
+
+    function isPrefilling() {
+      return opts.prefill && (!opts.prefillExpires || prefillExpired);
+    }
 
     function setData() {
       self[opts.reset ? 'reset' : 'set'](attributes, opts);
@@ -273,7 +285,7 @@
       self.trigger('sync', self, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
-      if (opts.prefill) { deferred.notify(self); }
+      if (isPrefilling()) { deferred.notify(self); }
       // ...finish and return if we're not
       else {
         if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
@@ -284,6 +296,8 @@
     if (data) {
       expired = data.expires;
       expired = expired && data.expires < (new Date()).getTime();
+      prefillExpired = data.prefillExpires;
+      prefillExpired = prefillExpired && data.prefillExpires < (new Date()).getTime();
       attributes = data.value;
     }
 
@@ -297,7 +311,7 @@
         setData();
       }
 
-      if (!opts.prefill) {
+      if (!isPrefilling()) {
         return deferred;
       }
     }
