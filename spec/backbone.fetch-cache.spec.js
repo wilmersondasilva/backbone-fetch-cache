@@ -739,6 +739,22 @@ describe('Backbone.fetchCache', function() {
             expect(model.toJSON()).toEqual(modelResponse);
           });
         });
+
+        it("sets the prefillExpires value if cached value doesn't exist", function() {
+          Backbone.fetchCache._cache = {};
+
+          var promise = model.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(Backbone.fetchCache._cache[model.url].prefillExpires / 100).toBeCloseTo(((new Date()).getTime() + 1000000) / 100, 0);
+          });
+        });
       });
 
       describe('with async: false option', function() {
@@ -1279,6 +1295,22 @@ describe('Backbone.fetchCache', function() {
           runs(function() {
             expect(collection.toJSON()).not.toEqual(cacheData);
             expect(collection.toJSON()).toEqual(collectionResponse);
+          });
+        });
+
+        it("sets the prefillExpires value if cached value doesn't exist", function() {
+          Backbone.fetchCache._cache = {};
+
+          var promise = collection.fetch({
+            prefill: true,
+            prefillExpires: 1000
+          });
+
+          waitsFor(promiseComplete(promise));
+          server.respond();
+
+          runs(function() {
+            expect(Backbone.fetchCache._cache[collection.url].prefillExpires / 100).toBeCloseTo(((new Date()).getTime() + 1000000) / 100, 0);
           });
         });
       });

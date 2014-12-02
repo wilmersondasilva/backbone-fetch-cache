@@ -99,7 +99,8 @@
   function setCache(instance, opts, attrs) {
     opts = (opts || {});
     var key = Backbone.fetchCache.getCacheKey(instance, opts),
-        expires = false;
+        expires = false,
+        prefillExpires = false;
 
     // Need url to use as cache key so return if we can't get it
     if (!key) { return; }
@@ -114,8 +115,13 @@
       expires = (new Date()).getTime() + ((opts.expires || 5 * 60) * 1000);
     }
 
+    if (opts.prefillExpires !== false) {
+      prefillExpires = (new Date()).getTime() + ((opts.prefillExpires || 5 * 60) * 1000);
+    }
+
     Backbone.fetchCache._cache[key] = {
       expires: expires,
+      prefillExpires: prefillExpires,
       value: attrs
     };
 
