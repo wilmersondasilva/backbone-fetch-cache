@@ -140,7 +140,7 @@
       localStorage.setItem(Backbone.fetchCache.getLocalStorageKey(), JSON.stringify(Backbone.fetchCache._cache));
     } catch (err) {
       var code = err.code || err.number || err.message;
-      if (code === 22) {
+      if (code === 22 || code === 1014) {
         this._deleteCacheWithPriority();
       } else {
         throw(err);

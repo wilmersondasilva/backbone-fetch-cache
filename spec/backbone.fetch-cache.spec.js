@@ -328,7 +328,7 @@ describe('Backbone.fetchCache', function() {
 
       it('calls deleteCacheWithPriority if a QUOTA_EXCEEDED_ERR is thrown in Firefox', function() {
         function FFQuotaError(message) {
-          this.message = 22;
+          this.code = 1014;
         }
 
         FFQuotaError.prototype = new Error();
