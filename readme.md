@@ -50,7 +50,7 @@ implementation of `jQuery.Deferred`, e.g. [Standalone-Deferred](https://github.c
 ### `#.fetch() options`
 The most used API hook for Backbone Fetch Cache is the Model and Collection `#.fetch()` method. Here are the options you can pass into that method to get behaviour particular to Backbone Fetch Cache:
 
-### `cache`
+#### `cache`
 Calls to `modelInstance.fetch` or `collectionInstance.fetch` will be fulfilled from the cache (if possible) when `cache: true` is set in the options hash:
 
 ```js
@@ -58,7 +58,7 @@ myModel.fetch({ cache: true });
 myCollection.fetch({ cache: true });
 ```
 
-### `expires`
+#### `expires`
 Cache vales expire after 5 minutes by default. You can adjust this by passing
 `expires: <seconds>` to the fetch call. Set to `false` to never expire:
 
@@ -71,7 +71,7 @@ myModel.fetch({ cache: true, expires: false });
 myCollection.fetch({ cache: true, expires: false });
 ```
 
-### `prefill` and `prefillExpires`
+#### `prefill` and `prefillExpires`
 This option allows the model/collection to be populated from the cache immediately and then be updated once the call to `fetch` has completed. The initial cache hit calls the `prefillSuccess` callback and then the AJAX success/error callbacks are called as normal when the request is complete. This allows the page to render something immediately and then update it after the request completes. (Note: the `prefillSuccess` callback _will not fire_ if the data is not found in the cache.)
 
 ```js
@@ -167,8 +167,8 @@ var MyModel = Backbone.Model.extend({
 });
 ```
 
-### `priorityFn`
-When setting items in localStorage, the browser may throw a ```QUOTA_EXCEEDED_ERR```, meaning the store is full. Backbone.fetchCache tries to work around this problem by deleting what it considers the most stale item to make space for the new data. The staleness of data is determined by the sorting function ```priorityFn````, which by default returns the oldest item.
+### Cache Priority in localStorage
+When setting items in localStorage, the browser may throw a ```QUOTA_EXCEEDED_ERR```, meaning the store is full. Backbone.fetchCache tries to work around this problem by deleting what it considers the most stale item to make space for the new data. The staleness of data is determined by the sorting function `priorityFn`, which by default returns the oldest item.
 
 The default is:
 ```
@@ -190,7 +190,7 @@ Backbone.fetchCache.priorityFn = function(a, b) {
 
 ## Events
 
-The `sync` event is triggered on a cache hit. A `cachesync` event is also triggered on Models and Collections, but only when a cache hit happens. This can be used if you need to differentiate between a server backed `sync` event and a cache backed event.
+The `sync` event will be triggered on a server response which skips the cache, as well as a cache hit. A `cachesync` event is also triggered on Models and Collections, but only when a cache hit happens, not a server sync. This can be used if you need to differentiate between a server backed `sync` event and a cache backed event.
 
 ## Automatic cache invalidation
 The cache item for a particular call will be cleared when a `create`, `update`, `patch` or `delete` call is made to the server. The plugin tries to be intelligent about this by clearing a model's collection cache if the model has a `.collection property`.
