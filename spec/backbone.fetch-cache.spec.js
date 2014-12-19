@@ -197,6 +197,7 @@ describe('Backbone.fetchCache', function() {
   });
 
   describe('.getLastSync', function() {
+    var lastSync;
     beforeEach(function() {
       lastSync = (new Date()).getTime();
       var opts = {lastSync: lastSync, cache: true};
