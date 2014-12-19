@@ -111,6 +111,7 @@ describe('Backbone.fetchCache', function() {
   });
 
   describe('custom cache key', function() {
+    var customModel;
     beforeEach(function() {
       customModel = new (Backbone.Model.extend({
         getCacheKey: function(options) {
