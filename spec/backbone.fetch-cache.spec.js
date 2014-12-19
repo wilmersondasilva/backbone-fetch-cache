@@ -212,6 +212,21 @@ describe('Backbone.fetchCache', function() {
     });
   });
 
+  describe('.getLastSync', function() {
+    var lastSync;
+    beforeEach(function() {
+      lastSync = (new Date()).getTime();
+      var opts = {lastSync: lastSync, cache: true};
+      Backbone.fetchCache.setCache(model, opts, modelResponse);
+    });
+
+    it('gets correct last sync', function() {
+      var cacheKey = Backbone.fetchCache.getCacheKey(model);
+      expect(Backbone.fetchCache.getLastSync(cacheKey)).toEqual(lastSync);
+    });
+
+  });
+
   describe('.clearItem', function() {
     beforeEach(function() {
       Backbone.fetchCache._cache = {

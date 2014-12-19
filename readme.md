@@ -125,6 +125,20 @@ myModel.fetch({ cache: true, expires: false });
 myCollection.fetch({ cache: true, expires: false });
 ```
 
+### `lastSync`
+If you want to know when was the last (server) sync of a given key, you can use:
+
+```js
+Backbone.fetchCache.getLastSync(myKey);
+```
+
+The lastSync attribute is set automatically after saving an item in cache.
+It defaults to `(new Date()).getTime()`.
+You may set your own lastSync attribute, by passing a `lastSync` to the fetch method:
+```js
+myModel.fetch({lastSync: myClock.getTime()});
+```
+
 <hr />
 
 ### `localStorage`
