@@ -75,13 +75,12 @@
 
   // Shared methods
   function getCacheKey(instance, opts) {
+    var url;
 
     // If the model has its own, custom, cache key function, use it.
     if (_.isFunction(instance.getCacheKey)) {
       return instance.getCacheKey(opts);
     }
-
-    var url;
 
     if(opts && opts.url) {
       url = opts.url;
