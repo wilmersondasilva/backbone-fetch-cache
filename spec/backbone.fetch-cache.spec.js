@@ -110,6 +110,21 @@ describe('Backbone.fetchCache', function() {
     });
   });
 
+  describe('custom cache key', function() {
+    beforeEach(function() {
+      customModel = new (Backbone.Model.extend({
+        getCacheKey: function(options) {
+          return 'cache_token';
+        }
+      }))();
+    });
+
+    it('fetches correct cache key', function() {
+      expect(Backbone.fetchCache.getCacheKey(customModel))
+        .toEqual('cache_token');
+    });
+  });
+
   describe('.setCache', function() {
     var opts;
 
