@@ -77,6 +77,11 @@
   function getCacheKey(instance, opts) {
     var url;
 
+    // If the model has its own, custom, cache key function, use it.
+    if (_.isFunction(instance.getCacheKey)) {
+      return instance.getCacheKey(opts);
+    }
+
     if(opts && opts.url) {
       url = opts.url;
     } else {

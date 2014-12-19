@@ -152,6 +152,17 @@ Backbone.fetchCache.getCacheKey = function(instance, options) {
   // => UserModel:1
 };
 ```
+You can also define a custom cache key function per model/collection
+```js
+var MyModel = Backbone.Model.extend({
+  ...
+  getCacheKey: function(options) {
+    return 'myModel:' + this.get('id');
+  }
+  // => myModel:1
+
+});
+```
 
 ### `priorityFn`
 When setting items in localStorage, the browser may throw a ```QUOTA_EXCEEDED_ERR```, meaning the store is full. Backbone.fetchCache tries to work around this problem by deleting what it considers the most stale item to make space for the new data. The staleness of data is determined by the sorting function ```priorityFn````, which by default returns the oldest item.
