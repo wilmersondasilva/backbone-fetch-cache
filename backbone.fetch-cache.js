@@ -100,6 +100,7 @@
     opts = (opts || {});
     var key = Backbone.fetchCache.getCacheKey(instance, opts),
         expires = false,
+        lastSync = (opts.lastSync || (new Date()).getTime()),
         prefillExpires = false;
 
     // Need url to use as cache key so return if we can't get it
@@ -121,11 +122,17 @@
 
     Backbone.fetchCache._cache[key] = {
       expires: expires,
+      lastSync : lastSync,
       prefillExpires: prefillExpires,
       value: attrs
     };
 
     Backbone.fetchCache.setLocalStorage();
+  }
+
+  function getLastSync(key) {
+    if (_.isFunction(key)) { key = key(); }
+    return Backbone.fetchCache._cache[key].lastSync;
   }
 
   function clearItem(key) {
@@ -345,6 +352,7 @@
   Backbone.fetchCache._superMethods = superMethods;
   Backbone.fetchCache.setCache = setCache;
   Backbone.fetchCache.getCacheKey = getCacheKey;
+  Backbone.fetchCache.getLastSync = getLastSync;
   Backbone.fetchCache.clearItem = clearItem;
   Backbone.fetchCache.setLocalStorage = setLocalStorage;
   Backbone.fetchCache.getLocalStorage = getLocalStorage;
