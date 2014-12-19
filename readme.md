@@ -188,16 +188,16 @@ Backbone.fetchCache.priorityFn = function(a, b) {
 };
 ```
 
-## Events
+### Events
 
 The `sync` event will be triggered on a server response which skips the cache, as well as a cache hit. A `cachesync` event is also triggered on Models and Collections, but only when a cache hit happens, not a server sync. This can be used if you need to differentiate between a server backed `sync` event and a cache backed event.
 
-## Automatic cache invalidation
+### Automatic Cache Invalidation
 The cache item for a particular call will be cleared when a `create`, `update`, `patch` or `delete` call is made to the server. The plugin tries to be intelligent about this by clearing a model's collection cache if the model has a `.collection property`.
 
 To achieve this, the plugin overrides `Backbone.Model.protoype.sync` and then calls the original method. If you are planning to override sync on a particular model then you should keep this in mind and make sure that you do it before the plugin runs. Overriding Backbone.sync directly should work fine.
 
-## Manual cache invalidation
+### Manual Cache Invalidation
 Sometimes you just need to clear a cached item manually. This can be called safely from anywhere in your application.
 
 ```js
