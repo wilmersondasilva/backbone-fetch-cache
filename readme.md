@@ -46,7 +46,10 @@ A note on [Zepto.js](http://zeptojs.com/). This plugin uses `jQuery.Deferred`
 which is not included in Zepto. You'll need to add a third party
 implementation of `jQuery.Deferred`, e.g. [Standalone-Deferred](https://github.com/Mumakil/Standalone-Deferred)
 
-## Options
+## API
+### `#.fetch() options`
+The most used API hook for Backbone Fetch Cache is the Model and Collection `#.fetch()` method. Here are the options you can pass into that method to get behaviour particular to Backbone Fetch Cache:
+
 ### `cache`
 Calls to `modelInstance.fetch` or `collectionInstance.fetch` will be fulfilled from the cache (if possible) when `cache: true` is set in the options hash:
 
@@ -55,7 +58,18 @@ myModel.fetch({ cache: true });
 myCollection.fetch({ cache: true });
 ```
 
-<hr />
+### `expires`
+Cache vales expire after 5 minutes by default. You can adjust this by passing
+`expires: <seconds>` to the fetch call. Set to `false` to never expire:
+
+```js
+myModel.fetch({ cache: true, expires: 60000 });
+myCollection.fetch({ cache: true, expires: 60000 });
+
+// These will never expire
+myModel.fetch({ cache: true, expires: false });
+myCollection.fetch({ cache: true, expires: false });
+```
 
 ### `prefill` and `prefillExpires`
 This option allows the model/collection to be populated from the cache immediately and then be updated once the call to `fetch` has completed. The initial cache hit calls the `prefillSuccess` callback and then the AJAX success/error callbacks are called as normal when the request is complete. This allows the page to render something immediately and then update it after the request completes. (Note: the `prefillSuccess` callback _will not fire_ if the data is not found in the cache.)
@@ -74,7 +88,7 @@ myCollection.fetch({
 });
 ```
 
-This option can be used with the promises interface like so (note: the `progress` event _will not fire_ if the data is not found in the cache.):
+`prefill` and `prefillExpires` options can be used with the promises interface like so (note: the `progress` event _will not fire_ if the data is not found in the cache.):
 
 ```js
 var modelPromise = myModel.fetch({ prefill: true });
@@ -109,39 +123,14 @@ myCollection.fetch({
 });
 ```
 
-<hr />
-
-### `expires`
-
-Cache vales expire after 5 minutes by default. You can adjust this by passing
-`expires: <seconds>` to the fetch call. Set to `false` to never expire:
-
-```js
-myModel.fetch({ cache: true, expires: 60000 });
-myCollection.fetch({ cache: true, expires: 60000 });
-
-// These will never expire
-myModel.fetch({ cache: true, expires: false });
-myCollection.fetch({ cache: true, expires: false });
-```
-
-### `lastSync`
+### lastSync
 If you want to know when was the last (server) sync of a given key, you can use:
 
 ```js
 Backbone.fetchCache.getLastSync(myKey);
 ```
 
-The lastSync attribute is set automatically after saving an item in cache.
-It defaults to `(new Date()).getTime()`.
-You may set your own lastSync attribute, by passing a `lastSync` to the fetch method:
-```js
-myModel.fetch({lastSync: myClock.getTime()});
-```
-
-<hr />
-
-### `localStorage`
+### localStorage
 By default the cache is persisted in localStorage (if available). Set `Backbone.fetchCache.localStorage = false` to disable this:
 
 ```js
