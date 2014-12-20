@@ -132,6 +132,18 @@
       value: attrs
     };
 
+    instance._fetchCache = {
+      clearItem: function() {
+        Backbone.fetchCache.clearItem(key, opts);
+      },
+      getCacheKey: function() {
+        return Backbone.fetchCache.getCacheKey(instance);
+      },
+      getLastSync: function() {
+        return Backbone.fetchCache.getLastSync(key);
+      }
+    };
+
     Backbone.fetchCache.setLocalStorage();
   }
 

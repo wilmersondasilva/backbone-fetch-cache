@@ -80,6 +80,31 @@ describe('Backbone.fetchCache', function() {
     });
   });
 
+  describe('Instance cache methods', function() {
+    var lastSync;
+
+    beforeEach(function() {
+      lastSync = (new Date()).getTime();
+      var opts = { cache: true, lastSync: lastSync };
+
+      Backbone.fetchCache.setCache(model, opts, modelResponse);
+    });
+
+    it('clears the cache', function() {
+      model._fetchCache.clearItem();
+
+      expect(Backbone.fetchCache._cache[model._fetchCache.getCacheKey()]).toEqual(null);
+    });
+
+    it('gets the cache key', function() {
+      expect(model._fetchCache.getCacheKey()).toEqual(model.url);
+    });
+
+    it('gets the last sync', function() {
+      expect(model._fetchCache.getLastSync()).toEqual(lastSync);
+    });
+  });
+
   describe('.getCacheKey', function() {
     it('uses options url with priority if set', function() {
       expect(Backbone.fetchCache.getCacheKey(model, {url: '/options-test-url'}))

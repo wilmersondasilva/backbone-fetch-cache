@@ -123,11 +123,21 @@ myCollection.fetch({
 });
 ```
 
-### lastSync
-If you want to know when was the last (server) sync of a given key, you can use:
+### Instance Cache Methods
+Once the cache is set on a model/collection a special `_fetchCache` object is set.
 
 ```js
-Backbone.fetchCache.getLastSync(myKey);
+// Manually clear the cache for an instance
+myModel._fetchCache.clearItem();
+myCollection._fetchCache.clearItem();
+
+// Get the cache key being used for an instance
+myModel._fetchCache.getCacheKey();
+myCollection._fetchCache.getCacheKey();
+
+// Get the last time this instance was synced to the server
+myModel._fetchCache.getLastSync();
+myCollection._fetchCache.getLastSync();
 ```
 
 ### localStorage
@@ -196,13 +206,6 @@ The `sync` event will be triggered on a server response which skips the cache, a
 The cache item for a particular call will be cleared when a `create`, `update`, `patch` or `delete` call is made to the server. The plugin tries to be intelligent about this by clearing a model's collection cache if the model has a `.collection property`.
 
 To achieve this, the plugin overrides `Backbone.Model.protoype.sync` and then calls the original method. If you are planning to override sync on a particular model then you should keep this in mind and make sure that you do it before the plugin runs. Overriding Backbone.sync directly should work fine.
-
-### Manual Cache Invalidation
-Sometimes you just need to clear a cached item manually. This can be called safely from anywhere in your application.
-
-```js
-Backbone.fetchCache.clearItem(myModel.url);
-```
 
 ## Tests
 You can run the tests by cloning the repo, installing the dependencies and
