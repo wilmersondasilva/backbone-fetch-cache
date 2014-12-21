@@ -100,7 +100,7 @@ collectionPromise.progress(someCallback); // Fires when the cache hit happens
 collectionPromise.done(anotherCallback); // Fires after the AJAX call
 ```
 
-`prefillExpires` affects `prefill` in the following ways:
+`prefillExpires` affects prefill in the following ways:
 
 1. If the cache doesn't hold the requested data, just fetch it (usual behaviour)
 2. If the cache holds an expired version of the requested data, just fetch it (usual behaviour)
