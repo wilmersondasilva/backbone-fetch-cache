@@ -262,7 +262,7 @@ describe('Backbone.fetchCache', function() {
         url: function () {
           return '/item/4';
         }
-      }
+      };
       Backbone.fetchCache.clearItem(entity, {data: {id: '007'}});
       expect(Backbone.fetchCache._cache['/item/4?id=007']).toBeUndefined();
     });
@@ -272,7 +272,7 @@ describe('Backbone.fetchCache', function() {
         getCacheKey: function () {
           return 'foobarbaz';
         }
-      }
+      };
       Backbone.fetchCache.clearItem(entity);
       expect(Backbone.fetchCache._cache['foobarbaz']).toBeUndefined();
     });
