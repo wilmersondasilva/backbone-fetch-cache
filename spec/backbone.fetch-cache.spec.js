@@ -231,7 +231,10 @@ describe('Backbone.fetchCache', function() {
     beforeEach(function() {
       Backbone.fetchCache._cache = {
         '/item/1': { foo: 'bar' },
-        '/item/2': { beep: 'boop' }
+        '/item/2': { beep: 'boop' },
+        '/item/3': { monty: 'zuma' },
+        '/item/4?id=007': { james: 'bond' },
+        'foobarbaz': { monkey: 'wrench' }
       };
     });
 
@@ -245,6 +248,33 @@ describe('Backbone.fetchCache', function() {
       spyOn(Backbone.fetchCache, 'setLocalStorage');
       Backbone.fetchCache.clearItem('/item/1');
       expect(Backbone.fetchCache.setLocalStorage).toHaveBeenCalled();
+    });
+
+    it('takes a function too', function () {
+      Backbone.fetchCache.clearItem(function () {
+        return '/item/3';
+      });
+      expect(Backbone.fetchCache._cache['/item/3']).toBeUndefined();
+    });
+
+    it('or entity with url', function () {
+      var entity = {
+        url: function () {
+          return '/item/4';
+        }
+      };
+      Backbone.fetchCache.clearItem(entity, {data: {id: '007'}});
+      expect(Backbone.fetchCache._cache['/item/4?id=007']).toBeUndefined();
+    });
+
+    it('or entity with custom key', function () {
+      var entity = {
+        getCacheKey: function () {
+          return 'foobarbaz';
+        }
+      };
+      Backbone.fetchCache.clearItem(entity);
+      expect(Backbone.fetchCache._cache['foobarbaz']).toBeUndefined();
     });
   });
 

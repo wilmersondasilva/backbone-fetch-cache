@@ -14,7 +14,7 @@ The local cache is persisted in `localStorage` if available for faster initial p
 
 The `prefill` option allows for models and collections to be filled with cache data just until the `fetch` operations are complete -- a nice way to make the app feel snappy on slower connections.
 
-## What's wrong with browser caching for AJAX responses?
+__*What's wrong with browser caching for AJAX responses?*__
 Nothing. This plugin is primarily for working with an API where you don't have control over response cache headers.
 
 ## Usage
@@ -100,7 +100,7 @@ collectionPromise.progress(someCallback); // Fires when the cache hit happens
 collectionPromise.done(anotherCallback); // Fires after the AJAX call
 ```
 
-`prefillExpires` affects `prefill` in the following ways:
+`prefillExpires` affects prefill in the following ways:
 
 1. If the cache doesn't hold the requested data, just fetch it (usual behaviour)
 2. If the cache holds an expired version of the requested data, just fetch it (usual behaviour)
@@ -146,7 +146,6 @@ By default the cache key is generated from the model's `url` property and the re
 ```
 
 This can be overridden with custom logic if required:
-
 ```js
 // Instance is a Backbone.Model or Backbone.Collection, options are passed
 // through form the fetch call
@@ -155,6 +154,7 @@ Backbone.fetchCache.getCacheKey = function(instance, options) {
   // => UserModel:1
 };
 ```
+
 You can also define a custom cache key function per model/collection
 ```js
 var MyModel = Backbone.Model.extend({
@@ -198,9 +198,16 @@ The cache item for a particular call will be cleared when a `create`, `update`, 
 To achieve this, the plugin overrides `Backbone.Model.protoype.sync` and then calls the original method. If you are planning to override sync on a particular model then you should keep this in mind and make sure that you do it before the plugin runs. Overriding Backbone.sync directly should work fine.
 
 ### Manual Cache Invalidation
-Sometimes you just need to clear a cached item manually. This can be called safely from anywhere in your application.
+Sometimes you just need to clear a cached item manually. `Backbone.fetchCache.clearItem()` can be called safely from anywhere in your application. It will take your backbone Model or Collection, a function that returns the key String, or the key String itself. If you pass in a Model or Collection, the `.getCacheKey()` method will be checked before the `url` property.
 
 ```js
+// With Model
+Backbone.fetchCache.clearItem(myModel);
+// With Function
+Backbone.fetchCache.clearItem(function () {
+  return someModel.url;
+});
+// With Key
 Backbone.fetchCache.clearItem(myModel.url);
 ```
 

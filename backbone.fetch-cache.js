@@ -140,8 +140,12 @@
     return Backbone.fetchCache._cache[key].lastSync;
   }
 
-  function clearItem(key) {
-    if (_.isFunction(key)) { key = key(); }
+  function clearItem(key, opts) {
+    if (_.isFunction(key)) {
+      key = key();
+    } else if (key && _.isObject(key)) {
+      key = getCacheKey(key, opts);
+    }
     delete Backbone.fetchCache._cache[key];
     Backbone.fetchCache.setLocalStorage();
   }
