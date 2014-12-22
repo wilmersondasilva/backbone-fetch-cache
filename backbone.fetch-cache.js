@@ -74,31 +74,29 @@
   }
 
   // Shared methods
-  function getCacheKey(instance, opts) {
-    var url;
-
-    // If the model has its own, custom, cache key function, use it.
-    if (_.isFunction(instance.getCacheKey)) {
-      return instance.getCacheKey(opts);
-    }
-
-    if(opts && opts.url) {
-      url = opts.url;
-    } else {
-      url = _.isFunction(instance.url) ? instance.url() : instance.url;
-    }
-
-    // Need url to use as cache key so return if we can't get it
-    if(!url) { return; }
-
-    if(opts && opts.data) {
-      if(typeof opts.data === 'string') {
-        return url + '?' + opts.data;
+  function getCacheKey(key, opts) {
+    if (key && _.isObject(key)) {
+      // If the model has its own, custom, cache key function, use it.
+      if (_.isFunction(key.getCacheKey)) {
+        return key.getCacheKey(opts);
+      }
+      // else, use the URL
+      if (opts && opts.url) {
+        key = opts.url;
       } else {
-        return url + '?' + $.param(opts.data);
+        key = _.isFunction(key.url) ? key.url() : key.url;
+      }
+    } else if (_.isFunction(key)) {
+      return key(opts);
+    }
+    if (opts && opts.data) {
+      if(typeof opts.data === 'string') {
+        return key + '?' + opts.data;
+      } else {
+        return key + '?' + $.param(opts.data);
       }
     }
-    return url;
+    return key;
   }
 
   function setCache(instance, opts, attrs) {
