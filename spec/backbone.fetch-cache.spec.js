@@ -224,12 +224,12 @@ describe('Backbone.fetchCache', function() {
       expect(Backbone.fetchCache.getLastSync(model.url)).toEqual(lastSync);
     });
 
-    it('gets correct last sync by from function key', function() {
+    it('gets correct last sync by function key', function() {
       var key = function () { return model.url; };
       expect(Backbone.fetchCache.getLastSync(key)).toEqual(lastSync);
     });
 
-    it('gets correct last sync by from entity', function() {
+    it('gets correct last sync by entity', function() {
       expect(Backbone.fetchCache.getLastSync(model)).toEqual(lastSync);
     });
   });
