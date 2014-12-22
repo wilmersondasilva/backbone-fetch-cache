@@ -212,6 +212,30 @@ describe('Backbone.fetchCache', function() {
     });
   });
 
+  describe('.getCache', function() {
+    var lastSync;
+    beforeEach(function() {
+      var opts = {cache: true};
+      Backbone.fetchCache.setCache(model, opts, modelResponse);
+    });
+
+    it('gets correct cache by string key', function() {
+      expect(Backbone.fetchCache.getCache(model.url)).toBeDefined();
+      expect(Backbone.fetchCache.getCache(model.url).value).toEqual(modelResponse);
+    });
+
+    it('gets correct cache by function key', function() {
+      var key = function () { return model.url; };
+      expect(Backbone.fetchCache.getCache(key)).toBeDefined();
+      expect(Backbone.fetchCache.getCache(key).value).toEqual(modelResponse);
+    });
+
+    it('gets correct cache by entity', function() {
+      expect(Backbone.fetchCache.getCache(model)).toBeDefined();
+      expect(Backbone.fetchCache.getCache(model).value).toEqual(modelResponse);
+    });
+  });
+
   describe('.getLastSync', function() {
     var lastSync;
     beforeEach(function() {
