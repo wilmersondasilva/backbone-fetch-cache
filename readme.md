@@ -130,6 +130,20 @@ If you want to know when was the last (server) sync of a given key, you can use:
 Backbone.fetchCache.getLastSync(myKey);
 ```
 
+### Explicitly fetching a cached item
+You can explicitly fetch a cached item, without having to call the models/collection `fetch`. This might be useful for debugging and testing:
+
+```js
+Backbone.fetchCache.getCache(myKey);
+```
+
+This will return the raw cache entity. Usually, you'd probably want to get the value, which is the model/collection data (attributes) itself:
+
+```js
+Backbone.fetchCache.getCache(myKey).value;
+```
+Note that this method always gets the cache data, without validating it or checking if it expired.
+
 ### localStorage
 By default the cache is persisted in localStorage (if available). Set `Backbone.fetchCache.localStorage = false` to disable this:
 
