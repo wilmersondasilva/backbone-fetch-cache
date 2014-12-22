@@ -220,11 +220,18 @@ describe('Backbone.fetchCache', function() {
       Backbone.fetchCache.setCache(model, opts, modelResponse);
     });
 
-    it('gets correct last sync', function() {
-      var cacheKey = Backbone.fetchCache.getCacheKey(model);
-      expect(Backbone.fetchCache.getLastSync(cacheKey)).toEqual(lastSync);
+    it('gets correct last sync by string key', function() {
+      expect(Backbone.fetchCache.getLastSync(model.url)).toEqual(lastSync);
     });
 
+    it('gets correct last sync by from function key', function() {
+      var key = function () { return model.url; };
+      expect(Backbone.fetchCache.getLastSync(key)).toEqual(lastSync);
+    });
+
+    it('gets correct last sync by from entity', function() {
+      expect(Backbone.fetchCache.getLastSync(model)).toEqual(lastSync);
+    });
   });
 
   describe('.clearItem', function() {

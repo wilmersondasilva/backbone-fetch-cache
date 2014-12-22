@@ -135,8 +135,12 @@
     Backbone.fetchCache.setLocalStorage();
   }
 
-  function getLastSync(key) {
-    if (_.isFunction(key)) { key = key(); }
+  function getLastSync(key, opts) {
+    if (_.isFunction(key)) {
+      key = key();
+    } else if (key && _.isObject(key)) {
+      key = getCacheKey(key, opts);
+    }
     return Backbone.fetchCache._cache[key].lastSync;
   }
 
