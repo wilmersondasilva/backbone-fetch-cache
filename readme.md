@@ -123,6 +123,18 @@ myCollection.fetch({
 });
 ```
 
+There is also 2 events for `cacheexpired` and `cacheprefillexpired`. So now you can react:
+
+```js
+model.on('cacheexpired', function() {
+  // Do something
+});
+
+model.on('cacheprefillexpired', function() {
+  // Do something
+});
+```
+
 ### lastSync
 If you want to know when was the last (server) sync of a given key, you can use:
 
