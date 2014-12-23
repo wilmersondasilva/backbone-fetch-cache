@@ -1,5 +1,7 @@
 # Backbone fetch cache
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/madglory/backbone-fetch-cache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/madglory/backbone-fetch-cache.png?branch=master)](https://travis-ci.org/madglory/backbone-fetch-cache)
 
 A Backbone plugin to cache calls to `Backbone.Model.prototype.fetch` and
