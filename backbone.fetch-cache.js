@@ -102,9 +102,9 @@
   function setCache(instance, opts, attrs) {
     opts = (opts || {});
     var key = Backbone.fetchCache.getCacheKey(instance, opts),
-        expires = false,
+        expires = false, onExpire = null,
         lastSync = (opts.lastSync || (new Date()).getTime()),
-        prefillExpires = false;
+        prefillExpires = false, onPrefillExpire = null;
 
     // Need url to use as cache key so return if we can't get it
     if (!key) { return; }
@@ -117,16 +117,28 @@
 
     if (opts.expires !== false) {
       expires = (new Date()).getTime() + ((opts.expires || 5 * 60) * 1000);
+      onExpire = (function() {
+        setTimeout(function() {
+          instance.trigger('cacheexpired', instance, attrs, opts);
+        }, expires);
+      }());
     }
 
     if (opts.prefillExpires !== false) {
       prefillExpires = (new Date()).getTime() + ((opts.prefillExpires || 5 * 60) * 1000);
+      onPrefillExpire = (function() {
+        setTimeout(function() {
+          instance.trigger('cacheprefillexpired', instance, attrs, opts);
+        }, prefillExpires);
+      }());
     }
 
     Backbone.fetchCache._cache[key] = {
       expires: expires,
+      onExpire: onExpire,
       lastSync : lastSync,
       prefillExpires: prefillExpires,
+      onPrefillExpire: onPrefillExpire,
       value: attrs
     };
 

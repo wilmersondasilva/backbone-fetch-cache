@@ -182,12 +182,19 @@ describe('Backbone.fetchCache', function() {
       var cacheKey;
 
       beforeEach(function() {
-        this.clock = sinon.useFakeTimers();
+        // Wire up a fake function that is called on "cacheexpired"
+        model.expired = function() {};
+        model.on('cacheexpired', model.expired, model);
+
+        // Spy on the function call
+        sinon.spy(model, "expired");
+
         cacheKey = Backbone.fetchCache.getCacheKey(model, this.opts);
       });
 
       afterEach(function() {
-        this.clock.restore();
+        // Remove the spy
+        model.expired.restore();
       });
 
       it('sets default expiry times for cache keys', function() {
@@ -208,6 +215,19 @@ describe('Backbone.fetchCache', function() {
         Backbone.fetchCache.setCache(model, opts, modelResponse);
         expect(Backbone.fetchCache._cache[cacheKey].expires)
           .toEqual(false);
+      });
+
+      it('fires cacheexpired event', function() {
+        var opts = { cache: true, expires: 0.5 };
+        Backbone.fetchCache.setCache(model, opts, modelResponse);
+
+        // Should not be called since it hasn't expired
+        expect(model.expired.called).toEqual(false);
+
+        // Wait for the cache to expire
+        setTimeout(function() {
+          expect(model.expired.called).toEqual(true);
+        }, 1000);
       });
     });
   });
