@@ -27,6 +27,7 @@
     "waitsFor": true,
     "runs": true,
     "require": true,
-    "module" : true
+    "module" : true,
+    "UTILS" : true
   }
 }
