@@ -9,7 +9,7 @@ describe('Model.fetch', function () {
     var values = null;
 
     beforeEach(function (done) {
-      var model, responses;
+      var model, requests;
 
       // This is the flag we're testing:
       Backbone.fetchCache.enabled = false;
@@ -19,9 +19,9 @@ describe('Model.fetch', function () {
         codename: '005'
       });
 
-      responses = [
-        { codename: '006' },
-        { codename: '007' }
+      requests = [
+        { response: { codename: '006' } },
+        { response: { codename: '007' } }
       ];
 
       // Set the response when done.
@@ -33,7 +33,7 @@ describe('Model.fetch', function () {
       // Mock the actual fetches:
       UTILS.fetch({
         entity: model,
-        responses: responses
+        requests: requests
       }, onresponse);
     });
 

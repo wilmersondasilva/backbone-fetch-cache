@@ -3,22 +3,22 @@ var UTILS = (function () {
 
   UTILS.fetch = function (args, callback) {
     var entity = args.entity,
-        responses = args.responses;
+        requests = args.requests;
 
-    if (!_.isArray(responses) || !responses.length) {
-      throw new Error('Missing test server responses.');
+    if (!_.isArray(requests) || !requests.length) {
+      throw new Error('Missing test requests.');
     }
 
-    return fetch(entity, responses, [], callback);
+    return fetch(entity, requests.slice(), [], callback);
   };
 
-  function fetch(entity, responses, results, callback) {
-    if (!responses.length) {
+  function fetch(entity, requests, results, callback) {
+    if (!requests.length) {
       callback(results);
     }
 
     var server = sinon.fakeServer.create(),
-        response = responses.shift(),
+        req = requests.shift(),
         url = _.result(entity, 'url'),
         result = {};
 
@@ -29,7 +29,7 @@ var UTILS = (function () {
     server.respondWith('GET', url, [
       200,
       { 'Content-Type': 'application/json' },
-      JSON.stringify(response)
+      JSON.stringify(req.response)
     ]);
 
     result.initial = snapshotAttributes(entity);
@@ -37,9 +37,9 @@ var UTILS = (function () {
       server.restore();
       result.synced = snapshotAttributes(entity);
       results.push(result);
-      fetch(entity, responses, results, callback);
+      fetch(entity, requests, results, callback);
     });
-    entity.fetch();
+    entity.fetch(req.options);
     server.respond();
   }
 
