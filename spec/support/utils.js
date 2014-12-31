@@ -14,7 +14,7 @@ var UTILS = (function () {
 
   function fetch(entity, requests, results, callback) {
     if (!requests.length) {
-      callback(results);
+      return callback(results);
     }
 
     var server = sinon.fakeServer.create(),
@@ -24,6 +24,10 @@ var UTILS = (function () {
 
     if (!url) {
       throw new Error('Missing Entity URL');
+    }
+
+    if (!req) {
+      throw new Error('Got an undefined request object.');
     }
 
     server.respondWith('GET', url, [

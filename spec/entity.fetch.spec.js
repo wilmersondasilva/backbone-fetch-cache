@@ -2,11 +2,12 @@ describe('Model.fetch', function () {
   var Model;
 
   Model = Backbone.Model.extend({
-    url: '/model/fetch'
+    urlRoot: '/fetch/cache/'
   });
 
   describe('with Backbone.fetchCache.enabled:false', function () {
-    var values = null;
+    var values, url;
+    values = null;
 
     beforeEach(function (done) {
       var model, requests;
@@ -16,6 +17,7 @@ describe('Model.fetch', function () {
 
       // Initialize a new model:
       model = new Model({
+        id: _.uniqueId(),
         codename: '005'
       });
 
@@ -44,7 +46,122 @@ describe('Model.fetch', function () {
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
-      expect(first.codename).not.toEqual(second.codename);
+      expect(first.codename).toEqual('006');
+      expect(second.codename).toEqual('007');
+    });
+  });
+
+  describe('with cache:true on second request only', function () {
+    var values = null;
+
+    beforeEach(function (done) {
+      var model, requests;
+
+      // Initialize a new model:
+      model = new Model({
+        id: _.uniqueId(),
+        codename: '005'
+      });
+
+      requests = [
+        { response: { codename: '006' } },
+        { response: { codename: '007' }, options: { cache: true } }
+      ];
+
+      // Set the response when done.
+      function onresponse(res) {
+        values = res;
+        return done();
+      }
+
+      // Mock the actual fetches:
+      UTILS.fetch({
+        entity: model,
+        requests: requests
+      }, onresponse);
+    });
+
+    it('has no cached value', function () {
+      var first = values[0].synced,
+          second = values[1].synced;
+      expect(first.codename).toEqual('006');
+      expect(second.codename).toEqual('007');
+    });
+  });
+
+  describe('with cache:true on first request only', function () {
+    var values = null;
+
+    beforeEach(function (done) {
+      var model, requests;
+
+      // Initialize a new model:
+      model = new Model({
+        id: _.uniqueId(),
+        codename: '005'
+      });
+
+      requests = [
+        { response: { codename: '006' }, options: { cache: true } },
+        { response: { codename: '007' } }
+      ];
+
+      // Set the response when done.
+      function onresponse(res) {
+        values = res;
+        return done();
+      }
+
+      // Mock the actual fetches:
+      UTILS.fetch({
+        entity: model,
+        requests: requests
+      }, onresponse);
+    });
+
+    it('uses new values from server', function () {
+      var first = values[0].synced,
+          second = values[1].synced;
+      expect(first.codename).toEqual('006');
+      expect(second.codename).toEqual('007');
+    });
+  });
+
+  describe('with cache:true on subsequent requests', function () {
+    var values = null;
+
+    beforeEach(function (done) {
+      var model, requests;
+
+      // Initialize a new model:
+      model = new Model({
+        id: _.uniqueId(),
+        codename: '005'
+      });
+
+      requests = [
+        { response: { codename: '006' }, options: { cache: true } },
+        { response: { codename: '007' }, options: { cache: true } }
+      ];
+
+      // Set the response when done.
+      function onresponse(res) {
+        values = res;
+        return done();
+      }
+
+      // Mock the actual fetches:
+      UTILS.fetch({
+        entity: model,
+        requests: requests
+      }, onresponse);
+    });
+
+    it('uses new values from server', function () {
+      var first = values[0].synced,
+          second = values[1].synced;
+      expect(first.codename).toEqual('006');
+      expect(second.codename).toEqual('006');
     });
   });
 });
