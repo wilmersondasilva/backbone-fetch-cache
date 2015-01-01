@@ -20,6 +20,7 @@ var UTILS = (function () {
     var server = sinon.fakeServer.create(),
         req = requests.shift(),
         url = _.result(entity, 'url'),
+        key = Backbone.fetchCache.getCacheKey(entity, req.options)
         result = {};
 
     if (!url) {
@@ -43,8 +44,23 @@ var UTILS = (function () {
       results.push(result);
       fetch(entity, requests, results, callback);
     });
-    entity.fetch(req.options);
-    server.respond();
+
+    // Need to fetch in next turn of event loop to allow cache to set.
+    window.setTimeout(function () {
+      if (req.options && req.options.explain) {
+        console.log('key:', key);
+        console.log('options', JSON.stringify(req.options));
+        console.log('response', JSON.stringify(req.response));
+        console.log('cache:', JSON.stringify(Backbone.fetchCache._cache[key], null, 2));
+      }
+
+      entity.fetch(req.options);
+
+      // Short delay for more realism.
+      window.setTimeout(function () {
+        server.respond();
+      }, 60);
+    }, 10);
   }
 
   function snapshotAttributes(entity) {
