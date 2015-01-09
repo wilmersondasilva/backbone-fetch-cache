@@ -81,27 +81,43 @@ describe('Backbone.fetchCache', function() {
   });
 
   describe('Instance cache methods', function() {
-    var lastSync;
+    var CacheModel, cacheModelInstance, lastSync, opts;
 
     beforeEach(function() {
-      lastSync = (new Date()).getTime();
-      var opts = { cache: true, lastSync: lastSync };
+      CacheModel = Backbone.Model.extend(
+        _.extend({}, Backbone.fetchCache.mixins, {
+          url: '/cache-model'
+        })
+      );
 
-      Backbone.fetchCache.setCache(model, opts, modelResponse);
+      lastSync = (new Date()).getTime();
+      opts = { cache: true, lastSync: lastSync };
+
+      cacheModelInstance = new CacheModel({ title: 'Cache Model' });
+
+      Backbone.fetchCache.setCache(cacheModelInstance, opts, { title: 'Cache Model' });
+    });
+
+    it('sets the cache', function() {
+      var data = { title: 'My New Cached Title' };
+
+      cacheModelInstance.cacheSet(opts, data);
+
+      expect(Backbone.fetchCache._cache[cacheModelInstance.url].value).toEqual(data);
+    });
+
+    it('gets the cache', function() {
+      expect(cacheModelInstance.cacheGet()).toEqual({ title: 'Cache Model' });
     });
 
     it('clears the cache', function() {
-      model._fetchCache.clearItem();
+      cacheModelInstance.cacheClear();
 
-      expect(Backbone.fetchCache._cache[model._fetchCache.getCacheKey()]).toEqual(null);
-    });
-
-    it('gets the cache key', function() {
-      expect(model._fetchCache.getCacheKey()).toEqual(model.url);
+      expect(Backbone.fetchCache._cache[cacheModelInstance.url]).toEqual(null);
     });
 
     it('gets the last sync', function() {
-      expect(model._fetchCache.getLastSync()).toEqual(lastSync);
+      expect(cacheModelInstance.cacheLastSync()).toEqual(lastSync);
     });
   });
 

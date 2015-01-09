@@ -101,6 +101,11 @@
     return url;
   }
 
+  function getCache(key) {
+    if (_.isFunction(key)) { key = key(); }
+    return Backbone.fetchCache._cache[key].value;
+  }
+
   function setCache(instance, opts, attrs) {
     opts = (opts || {});
     var key = Backbone.fetchCache.getCacheKey(instance, opts),
@@ -130,18 +135,6 @@
       lastSync : lastSync,
       prefillExpires: prefillExpires,
       value: attrs
-    };
-
-    instance._fetchCache = {
-      clearItem: function() {
-        Backbone.fetchCache.clearItem(key, opts);
-      },
-      getCacheKey: function() {
-        return Backbone.fetchCache.getCacheKey(instance);
-      },
-      getLastSync: function() {
-        return Backbone.fetchCache.getLastSync(key);
-      }
     };
 
     Backbone.fetchCache.setLocalStorage();
@@ -368,11 +361,34 @@
 
   Backbone.fetchCache._superMethods = superMethods;
   Backbone.fetchCache.setCache = setCache;
+  Backbone.fetchCache.getCache = getCache;
   Backbone.fetchCache.getCacheKey = getCacheKey;
   Backbone.fetchCache.getLastSync = getLastSync;
   Backbone.fetchCache.clearItem = clearItem;
   Backbone.fetchCache.setLocalStorage = setLocalStorage;
   Backbone.fetchCache.getLocalStorage = getLocalStorage;
+
+  // Mixins
+  Backbone.fetchCache.mixins = {
+    cacheSet: function (opts, attr) {
+      // Set cache to true so user doesn't have to
+      opts = _.exend({ cache: true }, opts);
+
+      return Backbone.fetchCache.setCache(this, opts, attr);
+    },
+    cacheGet: function (opts) {
+      var key = Backbone.fetchCache.getCacheKey(this);
+      return Backbone.fetchCache.getCache(key, opts);
+    },
+    cacheClear: function (opts) {
+      var key = Backbone.fetchCache.getCacheKey(this);
+      return Backbone.fetchCache.clearItem(key, opts);
+    },
+    cacheLastSync: function (opts) {
+      var key = Backbone.fetchCache.getCacheKey(this);
+      return Backbone.fetchCache.getLastSync(key, opts);
+    }
+  };
 
   return Backbone;
 }));

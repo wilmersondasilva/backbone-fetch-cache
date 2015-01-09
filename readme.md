@@ -207,6 +207,34 @@ The cache item for a particular call will be cleared when a `create`, `update`, 
 
 To achieve this, the plugin overrides `Backbone.Model.protoype.sync` and then calls the original method. If you are planning to override sync on a particular model then you should keep this in mind and make sure that you do it before the plugin runs. Overriding Backbone.sync directly should work fine.
 
+### Mixins
+
+The plugin provides a few mixin functions with `Backbone.fetchCache.mixins` to make the caching functionality available on your model and collection instances. These are optional and if you wish to use them you can do so by extending your models/collections slightly differently.
+
+```js
+var MyModel = Backbone.Model.extend(
+  _.extend({}, Backbone.fetchCache.mixins, {
+    
+    /* Your standard model definitions */
+
+  })
+);
+
+var instance = new MyModel({ title: 'Model With Mixins' });
+
+/* Set the cache only - calls Backbone.fetchCache.setCache */
+instance.cacheSet({ expires: 2000 }, { title: 'Title in cache changed' });
+
+// Get the cache value - calls Backbone.fetchCache.getCache
+var cacheValue = instance.cacheGet();
+
+// Get the last sync time - calls Backbone.fetchCache.getLastSync
+instance.cacheLastSync();
+
+// Clear the cache - calls Backbone.fetchCache.clearItem
+instance.cacheClear();
+```
+
 ## Tests
 You can run the tests by cloning the repo, installing the dependencies and
 running `grunt jasmine`:
