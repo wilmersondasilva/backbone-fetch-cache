@@ -372,7 +372,7 @@
   Backbone.fetchCache.mixins = {
     cacheSet: function (opts, attr) {
       // Set cache to true so user doesn't have to
-      opts = _.exend({ cache: true }, opts);
+      opts = _.extend({ cache: true }, opts);
 
       return Backbone.fetchCache.setCache(this, opts, attr);
     },
