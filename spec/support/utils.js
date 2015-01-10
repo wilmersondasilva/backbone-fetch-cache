@@ -67,10 +67,7 @@ var UTILS = (function () {
         fetch(entity, requests, counter, results, callback);
       });
 
-      // Short delay for more realism.
-      window.setTimeout(function () {
-        server.respond();
-      }, 60);
+      server.respond();
     }, 10);
   }
 
