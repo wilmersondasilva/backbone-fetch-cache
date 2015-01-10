@@ -3,16 +3,17 @@ var UTILS = (function () {
 
   UTILS.fetch = function (args, callback) {
     var entity = args.entity,
-        requests = args.requests;
+        requests = args.requests,
+        counter = createCounter;
 
     if (!_.isArray(requests) || !requests.length) {
       throw new Error('Missing test requests.');
     }
 
-    return fetch(entity, requests.slice(), [], callback);
+    return fetch(entity, requests.slice(), counter, [], callback);
   };
 
-  function fetch(entity, requests, results, callback) {
+  function fetch(entity, requests, counter, results, callback) {
     if (!requests.length) {
       return callback(results);
     }
@@ -21,7 +22,8 @@ var UTILS = (function () {
         req = requests.shift(),
         url = _.result(entity, 'url'),
         key = Backbone.fetchCache.getCacheKey(entity, req.options)
-        result = {};
+        deferred = null,
+        result = { events: {} };
 
     if (!url) {
       throw new Error('Missing Entity URL');
@@ -38,16 +40,18 @@ var UTILS = (function () {
     ]);
 
     result.initial = snapshotAttributes(entity);
+    entity.once('request', function () {
+      result.events.request = counter();
+    });
     entity.once('sync', function () {
+      result.events.sync = counter();
       server.restore();
       result.synced = snapshotAttributes(entity);
       results.push(result);
-      // Have to do next fetch in next turn of the event loop to give the
-      // deferred a chance to resolve.
-      window.setTimeout(function () {
-        fetch(entity, requests, results, callback);
-      }, 10);
     });
+    entity.once('cachesync', function () {
+      result.events.cachesync = counter();
+    })
 
     // Need to fetch in next turn of event loop to allow cache to set.
     window.setTimeout(function () {
@@ -58,7 +62,10 @@ var UTILS = (function () {
         console.log('cache:', JSON.stringify(Backbone.fetchCache._cache[key], null, 2));
       }
 
-      result.returns = entity.fetch(req.options);
+      result.returns = deferred = entity.fetch(req.options);
+      deferred.done(function () {
+        fetch(entity, requests, counter, results, callback);
+      });
 
       // Short delay for more realism.
       window.setTimeout(function () {
@@ -72,6 +79,15 @@ var UTILS = (function () {
       return snapshotAttributes(entity.first());
     }
     return _.clone(entity.attributes);
+  }
+
+  function createCounter() {
+    var count = 0;
+    return function () {
+      var rv = count;
+      count += 1;
+      return rv;
+    };
   }
 
   return UTILS;

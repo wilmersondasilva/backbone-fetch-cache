@@ -58,6 +58,30 @@ describe('Model.fetch', function () {
       expect(rv_2).toBeResolved();
     });
 
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -103,6 +127,30 @@ describe('Model.fetch', function () {
       expect(rv_1).toBeResolved();
       expect(rv_2).toBeADeferred();
       expect(rv_2).toBeResolved();
+    });
+
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
     });
 
     it('does not use cached values', function () {
@@ -152,6 +200,30 @@ describe('Model.fetch', function () {
       expect(rv_2).toBeResolved();
     });
 
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
+    });
+
     it('has no cached value', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -197,6 +269,30 @@ describe('Model.fetch', function () {
       expect(rv_1).toBeResolved();
       expect(rv_2).toBeADeferred();
       expect(rv_2).toBeResolved();
+    });
+
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
     });
 
     it('uses new values from server', function () {
@@ -245,6 +341,34 @@ describe('Model.fetch', function () {
       expect(rv_1).toBeResolved();
       expect(rv_2).toBeADeferred();
       expect(rv_2).toBeResolved();
+    });
+
+    it('fires request event on first fetch', function () {
+      var events_1 = values[0].events;
+      expect(events_1.request).toBeDefined();
+    });
+
+    it('does not fire request event on second fetch', function () {
+      var events_2 = values[1].events;
+      expect(events_2.request).toBeUndefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event on first request', function () {
+      var events_1 = values[0].events;
+      expect(events_1.cachesync).toBeUndefined();
+    });
+
+    it('fires cachesync event on second request', function () {
+      var events_2 = values[1].events;
+      expect(events_2.cachesync).toBeDefined();
     });
 
     it('uses cached value', function () {
@@ -311,6 +435,30 @@ describe('Collection.fetch', function () {
       expect(rv_2).toBeResolved();
     });
 
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -359,6 +507,30 @@ describe('Collection.fetch', function () {
       expect(rv_1).toBeResolved();
       expect(rv_2).toBeADeferred();
       expect(rv_2).toBeResolved();
+    });
+
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
     });
 
     it('does not use cached values', function () {
@@ -411,6 +583,30 @@ describe('Collection.fetch', function () {
       expect(rv_2).toBeResolved();
     });
 
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
+    });
+
     it('has no cached value', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -461,6 +657,30 @@ describe('Collection.fetch', function () {
       expect(rv_2).toBeResolved();
     });
 
+    it('fires request event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.request).toBeDefined();
+      expect(events_2.request).toBeDefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.cachesync).toBeUndefined();
+      expect(events_2.cachesync).toBeUndefined();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -509,6 +729,34 @@ describe('Collection.fetch', function () {
       expect(rv_1).toBeResolved();
       expect(rv_2).toBeADeferred();
       expect(rv_2).toBeResolved();
+    });
+
+    it('fires request event on first fetch', function () {
+      var events_1 = values[0].events;
+      expect(events_1.request).toBeDefined();
+    });
+
+    it('does not fire request event on second fetch', function () {
+      var events_2 = values[1].events;
+      expect(events_2.request).toBeUndefined();
+    });
+
+    it('fires sync event', function () {
+      var events_1 = values[0].events,
+          events_2 = values[1].events;
+
+      expect(events_1.sync).toBeDefined();
+      expect(events_2.sync).toBeDefined();
+    });
+
+    it('does not fire cachesync event on first request', function () {
+      var events_1 = values[0].events;
+      expect(events_1.cachesync).toBeUndefined();
+    });
+
+    it('fires cachesync event on second request', function () {
+      var events_2 = values[1].events;
+      expect(events_2.cachesync).toBeDefined();
     });
 
     it('uses cached value', function () {
