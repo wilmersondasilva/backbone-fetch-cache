@@ -49,6 +49,15 @@ describe('Model.fetch', function () {
       Backbone.fetchCache.enabled = true;
     });
 
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -85,6 +94,15 @@ describe('Model.fetch', function () {
         entity: model,
         requests: requests
       }, onresponse);
+    });
+
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
     });
 
     it('does not use cached values', function () {
@@ -125,6 +143,15 @@ describe('Model.fetch', function () {
       }, onresponse);
     });
 
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
+    });
+
     it('has no cached value', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -161,6 +188,15 @@ describe('Model.fetch', function () {
         entity: model,
         requests: requests
       }, onresponse);
+    });
+
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
     });
 
     it('uses new values from server', function () {
@@ -200,6 +236,15 @@ describe('Model.fetch', function () {
         entity: model,
         requests: requests
       }, onresponse);
+    });
+
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
     });
 
     it('uses cached value', function () {
@@ -257,6 +302,15 @@ describe('Collection.fetch', function () {
       Backbone.fetchCache.enabled = true;
     });
 
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -296,6 +350,15 @@ describe('Collection.fetch', function () {
         entity: collection,
         requests: requests
       }, onresponse);
+    });
+
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
     });
 
     it('does not use cached values', function () {
@@ -339,6 +402,15 @@ describe('Collection.fetch', function () {
       }, onresponse);
     });
 
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
+    });
+
     it('has no cached value', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -380,6 +452,15 @@ describe('Collection.fetch', function () {
       }, onresponse);
     });
 
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -419,6 +500,15 @@ describe('Collection.fetch', function () {
         entity: collection,
         requests: requests
       }, onresponse);
+    });
+
+    it('returns a resolved deferred', function () {
+      var rv_1 = values[0].returns,
+          rv_2 = values[1].returns;
+      expect(rv_1).toBeADeferred();
+      expect(rv_1).toBeResolved();
+      expect(rv_2).toBeADeferred();
+      expect(rv_2).toBeResolved();
     });
 
     it('uses cached value', function () {

@@ -42,7 +42,11 @@ var UTILS = (function () {
       server.restore();
       result.synced = snapshotAttributes(entity);
       results.push(result);
-      fetch(entity, requests, results, callback);
+      // Have to do next fetch in next turn of the event loop to give the
+      // deferred a chance to resolve.
+      window.setTimeout(function () {
+        fetch(entity, requests, results, callback);
+      }, 10);
     });
 
     // Need to fetch in next turn of event loop to allow cache to set.
@@ -54,7 +58,7 @@ var UTILS = (function () {
         console.log('cache:', JSON.stringify(Backbone.fetchCache._cache[key], null, 2));
       }
 
-      entity.fetch(req.options);
+      result.returns = entity.fetch(req.options);
 
       // Short delay for more realism.
       window.setTimeout(function () {
