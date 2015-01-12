@@ -21,7 +21,7 @@
     "beforeEach": true,
     "afterEach": true,
     "expect": true,
-    "spyOn": true,
+    "sinon": true,
     "jasmine": true,
     "require": true,
     "module" : true,
