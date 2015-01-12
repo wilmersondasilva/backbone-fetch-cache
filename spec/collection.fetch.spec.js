@@ -160,10 +160,12 @@ describe('Collection.fetch', function () {
   });
 
   describe('with cache:true on second request only', function () {
-    var values = null;
+    var values = null,
+        collection = null,
+        options = { cache: true };
 
     beforeEach(function (done) {
-      var id, collection, requests;
+      var id, requests;
       id = _.uniqueId();
 
       // Initialize a new collection:
@@ -176,7 +178,7 @@ describe('Collection.fetch', function () {
 
       requests = [
         { response: [{ id: id, codename: '006' }] },
-        { response: [{ id: id, codename: '007' }], options: { cache: true } }
+        { response: [{ id: id, codename: '007' }], options: options }
       ];
 
       // Set the response when done.
@@ -185,11 +187,22 @@ describe('Collection.fetch', function () {
         return done();
       }
 
+      // Set spies
+      sinon.spy(Backbone.fetchCache, 'getCacheKey');
+
       // Mock the actual fetches:
       UTILS.fetch({
         entity: collection,
         requests: requests
       }, onresponse);
+    });
+
+    afterEach(function (done) {
+      // Need timeout to fully clear out the spies for some reason.
+      window.setTimeout(function () {
+        Backbone.fetchCache.getCacheKey.restore();
+        done();
+      }, 10);
     });
 
     it('returns a resolved deferred', function () {
@@ -223,6 +236,16 @@ describe('Collection.fetch', function () {
 
       expect(events_1.cachesync).toBeUndefined();
       expect(events_2.cachesync).toBeUndefined();
+    });
+
+    it('calls Backbone.fetchCache.getCacheKey', function () {
+      var firstCall, secondCall;
+      expect(Backbone.fetchCache.getCacheKey.called).toBeTruthy();
+      // Called once in Utils, and twice in the library.
+      firstCall = Backbone.fetchCache.getCacheKey.getCall(1);
+      secondCall = Backbone.fetchCache.getCacheKey.getCall(4);
+      expect(firstCall.calledWith(collection)).toBeTruthy();
+      expect(secondCall.calledWith(collection, options)).toBeTruthy();
     });
 
     it('has no cached value', function () {
@@ -234,10 +257,12 @@ describe('Collection.fetch', function () {
   });
 
   describe('with cache:true on first request only', function () {
-    var values = null;
+    var collection = null,
+        options = { cache: true },
+        values = null;
 
     beforeEach(function (done) {
-      var id, collection, requests;
+      var id, requests;
       id = _.uniqueId();
 
       // Initialize a new collection:
@@ -249,7 +274,7 @@ describe('Collection.fetch', function () {
       collection.url = '/fetch/cache/collection-'+ id;
 
       requests = [
-        { response: [{ id: id, codename: '006' }], options: { cache: true } },
+        { response: [{ id: id, codename: '006' }], options: options },
         { response: [{ id: id, codename: '007' }] }
       ];
 
@@ -259,11 +284,22 @@ describe('Collection.fetch', function () {
         return done();
       }
 
+      // Set spies
+      sinon.spy(Backbone.fetchCache, 'getCacheKey');
+
       // Mock the actual fetches:
       UTILS.fetch({
         entity: collection,
         requests: requests
       }, onresponse);
+    });
+
+    afterEach(function (done) {
+      // Need timeout to fully clear out the spies for some reason.
+      window.setTimeout(function () {
+        Backbone.fetchCache.getCacheKey.restore();
+        done();
+      }, 10);
     });
 
     it('returns a resolved deferred', function () {
@@ -299,6 +335,16 @@ describe('Collection.fetch', function () {
       expect(events_2.cachesync).toBeUndefined();
     });
 
+    it('calls Backbone.fetchCache.getCacheKey', function () {
+      var firstCall, secondCall;
+      expect(Backbone.fetchCache.getCacheKey.called).toBeTruthy();
+      // Called once in Utils, and twice in the library.
+      firstCall = Backbone.fetchCache.getCacheKey.getCall(1);
+      secondCall = Backbone.fetchCache.getCacheKey.getCall(4);
+      expect(firstCall.calledWith(collection, options)).toBeTruthy();
+      expect(secondCall.calledWith(collection)).toBeTruthy();
+    });
+
     it('uses new values from server', function () {
       var first = values[0].synced,
           second = values[1].synced;
@@ -308,10 +354,12 @@ describe('Collection.fetch', function () {
   });
 
   describe('with cache:true on subsequent requests', function () {
-    var values = null;
+    var collection = null,
+        options = { cache: true },
+        values = null;
 
     beforeEach(function (done) {
-      var id, collection, requests;
+      var id, requests;
       id = _.uniqueId();
 
       // Initialize a new collection:
@@ -323,8 +371,8 @@ describe('Collection.fetch', function () {
       collection.url = '/fetch/cache/collection-'+ id;
 
       requests = [
-        { response: [{ id: id, codename: '006' }], options: { cache: true } },
-        { response: [{ id: id, codename: '007' }], options: { cache: true } }
+        { response: [{ id: id, codename: '006' }], options: options },
+        { response: [{ id: id, codename: '007' }], options: options }
       ];
 
       // Set the response when done.
@@ -333,11 +381,22 @@ describe('Collection.fetch', function () {
         return done();
       }
 
+      // Set spies
+      sinon.spy(Backbone.fetchCache, 'getCacheKey');
+
       // Mock the actual fetches:
       UTILS.fetch({
         entity: collection,
         requests: requests
       }, onresponse);
+    });
+
+    afterEach(function (done) {
+      // Need timeout to fully clear out the spies for some reason.
+      window.setTimeout(function () {
+        Backbone.fetchCache.getCacheKey.restore();
+        done();
+      }, 10);
     });
 
     it('returns a resolved deferred', function () {
@@ -375,6 +434,16 @@ describe('Collection.fetch', function () {
     it('fires cachesync event on second request', function () {
       var events_2 = values[1].events;
       expect(events_2.cachesync).toBeDefined();
+    });
+
+    it('calls Backbone.fetchCache.getCacheKey', function () {
+      var firstCall, secondCall;
+      expect(Backbone.fetchCache.getCacheKey.called).toBeTruthy();
+      // Called once in Utils, and twice in the library.
+      firstCall = Backbone.fetchCache.getCacheKey.getCall(1);
+      secondCall = Backbone.fetchCache.getCacheKey.getCall(4);
+      expect(firstCall.calledWith(collection, options)).toBeTruthy();
+      expect(secondCall.calledWith(collection, options)).toBeTruthy();
     });
 
     it('uses cached value', function () {

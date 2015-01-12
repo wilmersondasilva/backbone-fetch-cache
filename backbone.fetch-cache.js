@@ -75,7 +75,9 @@
 
   // Shared methods
   function getCacheKey(key, opts) {
-    if (key && _.isObject(key)) {
+    if (typeof key === 'function') {
+      return key(opts);
+    } else if (key && _.isObject(key)) {
       // If the model has its own, custom, cache key function, use it.
       if (_.isFunction(key.getCacheKey)) {
         return key.getCacheKey(opts);
@@ -84,10 +86,8 @@
       if (opts && opts.url) {
         key = opts.url;
       } else {
-        key = _.isFunction(key.url) ? key.url() : key.url;
+        key = _.result(key, 'url');
       }
-    } else if (_.isFunction(key)) {
-      return key(opts);
     }
     if (opts && opts.data) {
       if(typeof opts.data === 'string') {
