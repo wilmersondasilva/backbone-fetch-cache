@@ -61,7 +61,7 @@ myCollection.fetch({ cache: true });
 ```
 
 #### `expires`
-Cache vales expire after 5 minutes by default. You can adjust this by passing
+Cache values expire after 5 minutes by default. You can adjust this by passing
 `expires: <seconds>` to the fetch call. Set to `false` to never expire:
 
 ```js
