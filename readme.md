@@ -44,6 +44,18 @@ requirejs.config({
 });
 ```
 
+If you are using CommonJS modules, install via `npm`:
+
+```
+npm install backbone-fetch-cache
+```
+
+then require it in your modules:
+
+```js
+var fetchCache = require('backbone-fetch-cache');
+```
+
 A note on [Zepto.js](http://zeptojs.com/). This plugin uses `jQuery.Deferred`
 which is not included in Zepto. You'll need to add a third party
 implementation of `jQuery.Deferred`, e.g. [Standalone-Deferred](https://github.com/Mumakil/Standalone-Deferred)
