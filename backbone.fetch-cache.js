@@ -156,6 +156,11 @@
     delete Backbone.fetchCache._cache[key];
     Backbone.fetchCache.setLocalStorage();
   }
+  
+  function reset() {
+    // Clearing all cache items
+    Backbone.fetchCache._cache = {};
+  }
 
   function setLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
@@ -371,6 +376,7 @@
   Backbone.fetchCache.getCacheKey = getCacheKey;
   Backbone.fetchCache.getLastSync = getLastSync;
   Backbone.fetchCache.clearItem = clearItem;
+  Backbone.fetchCache.reset = reset;
   Backbone.fetchCache.setLocalStorage = setLocalStorage;
   Backbone.fetchCache.getLocalStorage = getLocalStorage;
 
