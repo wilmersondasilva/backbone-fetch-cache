@@ -163,6 +163,14 @@ By default the cache is persisted in localStorage (if available). Set `Backbone.
 Backbone.fetchCache.localStorage = false;
 ```
 
+### Parameter order
+By default promises resolve with the first parameter being the Backbone Object, to change that and get raw data as the first parameter
+
+```js
+\\ true by default
+Backbone.fetchCache.selfParameter = false;
+```
+
 ### Custom cache keys
 
 By default the cache key is generated from the model's `url` property and the requests params:

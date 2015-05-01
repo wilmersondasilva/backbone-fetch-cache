@@ -44,6 +44,7 @@
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
   // Global flag to enable/disable caching
   Backbone.fetchCache.enabled = true;
+  Backbone.fetchCache.selfParameter = true;
 
   Backbone.fetchCache.priorityFn = function(a, b) {
     if (!a || !a.expires || !b || !b.expires) {
@@ -213,6 +214,7 @@
     }
 
     function setData() {
+      var resolveValues = Backbone.fetchCache.selfParameter? [self] : [attributes];
       if (opts.parse) {
         attributes = self.parse(attributes, opts);
       }
@@ -229,7 +231,7 @@
       // ...finish and return if we're not
       else {
         if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
-        deferred.resolve(self);
+        deferred.resolve.apply(self, resolveValues);
       }
     }
 
@@ -258,8 +260,15 @@
 
     // Delegate to the actual fetch method and store the attributes in the cache
     var jqXHR = superMethods.modelFetch.apply(this, arguments);
+
     // resolve the returned promise when the AJAX call completes
-    jqXHR.done( _.bind(deferred.resolve, this, this) )
+    jqXHR.done(function(data, status, xhr) {
+        if (Backbone.fetchCache.selfParameter) {
+          deferred.resolve.apply(self, [self, data]);
+        } else {
+          deferred.resolve.apply(self, arguments);
+        }
+      })
       // Set the new data in the cache
       .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
       // Reject the promise on fail
@@ -318,6 +327,7 @@
     }
 
     function setData() {
+      var resolveValues = Backbone.fetchCache.selfParameter? [self] : [attributes];
       self[opts.reset ? 'reset' : 'set'](attributes, opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self); }
 
@@ -330,7 +340,7 @@
       // ...finish and return if we're not
       else {
         if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
-        deferred.resolve(self);
+        deferred.resolve.apply(self, resolveValues);
       }
     }
 
@@ -359,8 +369,15 @@
 
     // Delegate to the actual fetch method and store the attributes in the cache
     var jqXHR = superMethods.collectionFetch.apply(this, arguments);
+
     // resolve the returned promise when the AJAX call completes
-    jqXHR.done( _.bind(deferred.resolve, this, this) )
+    jqXHR.done(function(data, status, xhr) {
+        if (Backbone.fetchCache.selfParameter) {
+          deferred.resolve.apply(self, [self, data]);
+        } else {
+          deferred.resolve.apply(self, arguments);
+        }
+      })
       // Set the new data in the cache
       .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
       // Reject the promise on fail
