@@ -199,6 +199,7 @@
         prefillExpired = false,
         attributes = false,
         deferred = new $.Deferred(),
+        context = opts.context || this,
         self = this;
 
     function isPrefilling() {
@@ -211,18 +212,18 @@
       }
 
       self.set(attributes, opts);
-      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self, attributes, opts); }
+      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess.call(context, self, attributes, opts); }
 
       // Trigger sync events
       self.trigger('cachesync', self, attributes, opts);
       self.trigger('sync', self, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
-      if (isPrefilling()) { deferred.notify(self); }
+      if (isPrefilling()) { deferred.notifyWith(context, [self]); }
       // ...finish and return if we're not
       else {
-        if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
-        deferred.resolve(self);
+        if (_.isFunction(opts.success)) { opts.success.call(context, self, attributes, opts); }
+        deferred.resolveWith(context, [self]);
       }
     }
 
@@ -252,11 +253,11 @@
     // Delegate to the actual fetch method and store the attributes in the cache
     var jqXHR = superMethods.modelFetch.apply(this, arguments);
     // resolve the returned promise when the AJAX call completes
-    jqXHR.done( _.bind(deferred.resolve, this, this) )
+    jqXHR.done( _.bind(deferred.resolve, context, this) )
       // Set the new data in the cache
       .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
       // Reject the promise on fail
-      .fail( _.bind(deferred.reject, this, this) );
+      .fail( _.bind(deferred.reject, context, this) );
 
     deferred.abort = jqXHR.abort;
 
@@ -304,6 +305,7 @@
         prefillExpired = false,
         attributes = false,
         deferred = new $.Deferred(),
+        context = opts.context || this,
         self = this;
 
     function isPrefilling() {
@@ -312,18 +314,18 @@
 
     function setData() {
       self[opts.reset ? 'reset' : 'set'](attributes, opts);
-      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self); }
+      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess.call(context, self); }
 
       // Trigger sync events
       self.trigger('cachesync', self, attributes, opts);
       self.trigger('sync', self, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
-      if (isPrefilling()) { deferred.notify(self); }
+      if (isPrefilling()) { deferred.notifyWith(context, [self]); }
       // ...finish and return if we're not
       else {
-        if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
-        deferred.resolve(self);
+        if (_.isFunction(opts.success)) { opts.success.call(context, self, attributes, opts); }
+        deferred.resolveWith(context, [self]);
       }
     }
 
@@ -353,11 +355,11 @@
     // Delegate to the actual fetch method and store the attributes in the cache
     var jqXHR = superMethods.collectionFetch.apply(this, arguments);
     // resolve the returned promise when the AJAX call completes
-    jqXHR.done( _.bind(deferred.resolve, this, this) )
+    jqXHR.done( _.bind(deferred.resolve, context, this) )
       // Set the new data in the cache
       .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
       // Reject the promise on fail
-      .fail( _.bind(deferred.reject, this, this) );
+      .fail( _.bind(deferred.reject, context, this) );
 
     deferred.abort = jqXHR.abort;
 
