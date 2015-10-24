@@ -893,6 +893,132 @@ describe('Backbone.fetchCache', function() {
           });
         });
       });
+
+      describe('with context option', function() {
+        var context;
+
+        function setFoo() {
+          this.foo = 'bar';
+        }
+
+        beforeEach(function() {
+          context = {};
+        });
+
+        describe('on AJAX success', function() {
+          it('resolves the promise with context', function() {
+            var done = jasmine.createSpy('done').andCallFake(setFoo);
+            var promise = model.fetch({
+              context: context
+            });
+
+            promise.done(done);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(done).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+        });
+
+        describe('on AJAX error', function() {
+          it('rejects the promise with context', function() {
+            var fail = jasmine.createSpy('fail').andCallFake(setFoo);
+            var promise = errorModel.fetch({
+              context: context
+            });
+
+            promise.fail(fail);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(fail).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+        });
+
+        describe('on a cache hit', function() {
+          var cacheData;
+
+          beforeEach(function() {
+            cacheData = { cheese: 'pickle' };
+            Backbone.fetchCache._cache[model.url] = {
+              value: cacheData,
+              expires: (new Date()).getTime() + (5* 60 * 1000)
+            };
+          });
+
+          it('resolves the promise with context', function() {
+            var done = jasmine.createSpy('done').andCallFake(setFoo);
+            var promise = model.fetch({
+              cache: true,
+              context: context
+            });
+
+            promise.done(done);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(done).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('calls the prefillSuccess callback with context', function() {
+            var prefillSuccess = jasmine.createSpy('prefillSuccess').andCallFake(setFoo);
+            var promise = model.fetch({
+              context: context,
+              prefill: true,
+              prefillSuccess: prefillSuccess
+            });
+
+            waitsFor(promiseNotified(promise));
+
+            runs(function() {
+              expect(prefillSuccess).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('triggers progress on the promise with context', function() {
+            var progress = jasmine.createSpy('progress').andCallFake(setFoo);
+            var promise = model.fetch({
+              context: context,
+              prefill: true
+            });
+
+            promise.progress(progress);
+            waitsFor(promiseNotified(promise));
+
+            runs(function() {
+              expect(progress).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('calls the success callback with context', function() {
+            var success = jasmine.createSpy('success').andCallFake(setFoo);
+            var promise = model.fetch({
+              cache: true,
+              context: context,
+              success: success
+            });
+
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(success).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+        });
+      });
     });
 
     describe('#sync', function() {
@@ -1420,6 +1546,130 @@ describe('Backbone.fetchCache', function() {
 
           expect(collection.toJSON()).not.toEqual(cacheData);
           expect(collection.toJSON()).toEqual(collectionResponse);
+        });
+      });
+
+      describe('with context option', function() {
+        var context;
+
+        function setFoo() {
+          this.foo = 'bar';
+        }
+
+        beforeEach(function() {
+          context = {};
+        });
+
+        describe('on AJAX success', function() {
+          it('resolves the promise with context', function() {
+            var done = jasmine.createSpy('done').andCallFake(setFoo);
+            var promise = collection.fetch({
+              context: context
+            });
+
+            promise.done(done);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(done).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+        });
+
+        describe('on AJAX error', function() {
+          it('rejects the promise with context', function() {
+            var fail = jasmine.createSpy('fail').andCallFake(setFoo);
+            var promise = errorCollection.fetch({
+              context: context
+            });
+
+            promise.fail(fail);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(fail).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+        });
+
+        describe('on a cache hit', function() {
+          beforeEach(function() {
+            cacheData = { cheese: 'pickle' };
+            Backbone.fetchCache._cache[collection.url] = {
+              value: cacheData,
+              expires: (new Date()).getTime() + (5* 60 * 1000)
+            };
+          });
+
+          it('resolves the promise with context', function() {
+            var done = jasmine.createSpy('done').andCallFake(setFoo);
+            var promise = collection.fetch({
+              cache: true,
+              context: context
+            });
+
+            promise.done(done);
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(done).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('calls the prefillSuccess callback with context', function() {
+            var prefillSuccess = jasmine.createSpy('prefillSuccess').andCallFake(setFoo);
+            var promise = collection.fetch({
+              context: context,
+              prefill: true,
+              prefillSuccess: prefillSuccess
+            });
+
+            waitsFor(promiseNotified(promise));
+
+            runs(function() {
+              expect(prefillSuccess).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('triggers progress on the promise with context', function() {
+            var progress = jasmine.createSpy('progress').andCallFake(setFoo);
+            var promise = collection.fetch({
+              context: context,
+              prefill: true
+            });
+
+            promise.progress(progress);
+            waitsFor(promiseNotified(promise));
+
+            runs(function() {
+              expect(progress).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
+
+          it('calls the success callback with context', function() {
+            var success = jasmine.createSpy('success').andCallFake(setFoo);
+            var promise = collection.fetch({
+              cache: true,
+              context: context,
+              success: success
+            });
+
+            waitsFor(promiseComplete(promise));
+            server.respond();
+
+            runs(function() {
+              expect(success).toHaveBeenCalled();
+              expect(context.foo).toBe('bar');
+            });
+          });
         });
       });
     });
