@@ -14,7 +14,13 @@
           isFunc(this.actual.pipe) &&
           isFunc(this.actual.done) &&
           isFunc(this.actual.fail) &&
-          isFunc(this.actual.progress)
+          isFunc(this.actual.progress) &&
+          !this.actual.hasOwnProperty('notify') && 
+          !this.actual.hasOwnProperty('notifyWith') &&
+          !this.actual.hasOwnProperty('reject') &&
+          !this.actual.hasOwnProperty('rejectWith') &&
+          !this.actual.hasOwnProperty('resolve') &&
+          !this.actual.hasOwnProperty('resolveWith')
         );
       },
       toBeResolved: function(expected)  {

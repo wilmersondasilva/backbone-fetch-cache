@@ -1116,8 +1116,16 @@ describe('Backbone.fetchCache', function() {
       });
 
       describe('on cache hit', function() {
+        beforeEach(function() {
+          Backbone.fetchCache._cache[collection.url] = {
+            value: cacheData,
+            expires: (new Date()).getTime() + (5* 60 * 1000)
+          };
+        });
+
         it('returns an unfulfilled promise', function() {
           var promise = collection.fetch({ cache: true });
+
           expect(promise).toBeAPromise();
           expect(promise).toBeUnresolved();
         });
@@ -1126,11 +1134,6 @@ describe('Backbone.fetchCache', function() {
           var options = { cache: true, remove: false };
 
           spyOn(collection, 'set');
-          Backbone.fetchCache._cache[collection.url] = {
-            value: cacheData,
-            expires: (new Date()).getTime() + (5* 60 * 1000)
-          };
-
           waitsFor(promiseComplete(collection.fetch(options)));
 
           runs(function() {
@@ -1142,11 +1145,6 @@ describe('Backbone.fetchCache', function() {
           var options = { cache: true, reset: true };
 
           spyOn(collection, 'reset');
-          Backbone.fetchCache._cache[collection.url] = {
-            value: cacheData,
-            expires: (new Date()).getTime() + (5* 60 * 1000)
-          };
-
           waitsFor(promiseComplete(collection.fetch(options)));
 
           runs(function() {
@@ -1156,12 +1154,6 @@ describe('Backbone.fetchCache', function() {
 
         it('fulfills the promise with the collection instance', function() {
           var spy = jasmine.createSpy('success');
-
-          Backbone.fetchCache._cache[collection.url] = {
-            value: cacheData,
-            expires: (new Date()).getTime() + (5* 60 * 1000)
-          };
-
           var promise = collection.fetch({ cache: true }).done(spy);
 
           waitsFor(promiseComplete(promise));
@@ -1177,13 +1169,7 @@ describe('Backbone.fetchCache', function() {
             success: success
           };
 
-          Backbone.fetchCache._cache[collection.url] = {
-            value: cacheData,
-            expires: (new Date()).getTime() + (5* 60 * 1000)
-          };
-
           waitsFor(promiseComplete(collection.fetch(options)));
-
           runs(function() {
             expect(success).toHaveBeenCalledWith(collection, cacheData, options);
           });

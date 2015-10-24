@@ -245,7 +245,7 @@
       }
 
       if (!isPrefilling()) {
-        return deferred;
+        return deferred.promise();
       }
     }
 
@@ -261,7 +261,7 @@
     deferred.abort = jqXHR.abort;
 
     // return a promise which provides the same methods as a jqXHR object
-    return deferred;
+    return deferred.promise();
   };
 
   // Override Model.prototype.sync and try to clear cache items if it looks
@@ -346,7 +346,7 @@
       }
 
       if (!isPrefilling()) {
-        return deferred;
+        return deferred.promise();
       }
     }
 
@@ -362,7 +362,7 @@
     deferred.abort = jqXHR.abort;
 
     // return a promise which provides the same methods as a jqXHR object
-    return deferred;
+    return deferred.promise();
   };
 
   // Prime the cache from localStorage on initialization
